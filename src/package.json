@@ -1,0 +1,17 @@
+{
+  "name": "pwhint-store-publish-lambda",
+  "private": true,
+  "version": "0.0.1",
+  "main": "handler.js",
+  "dependencies": {
+    "aws-sdk": "^2.280.1",
+    "dotenv": "^6.0.0"
+  },
+  "devDependencies": {
+    "serverless": "^1.29.0",
+    "serverless-export-env": "^1.2.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

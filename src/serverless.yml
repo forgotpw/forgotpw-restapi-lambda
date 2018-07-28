@@ -1,0 +1,70 @@
+service: pwhint-store-publish
+
+# pin to a specific Serverless version
+# frameworkVersion: "=1.28.0"
+
+provider:
+  name: aws
+  region: us-east-1
+  runtime: nodejs8.10
+  deploymentBucket: forgotpw-deploy-${opt:awsEnv, 'dev'}
+  stage: live
+  logRetentionInDays: 14 # cloudwatch logs
+  apiGateway:
+    restApiId: ${env:REST_API_ID}
+    restApiRootResourceId: ${env:ROOT_RESOURCE_ID}
+    restApiResources:
+      '/v1': '${env:V1_RESOURCE_ID}'
+  iamRoleStatements:
+    -
+      Effect: Allow
+      Action:
+        - sns:Publish
+      Resource:
+        - 'Fn::Join':
+          - ':'
+          -
+            - 'arn:aws:sns'
+            - Ref: 'AWS::Region'
+            - Ref: 'AWS::AccountId'
+            - 'fpw-pwhint-store-request'
+
+plugins:
+  - serverless-export-env
+
+package:
+  exclude:
+    - .env
+
+custom:
+  snsTopicArn:
+    Fn::Join:
+      - ':'
+      - - arn
+        - aws
+        - sns
+        - Ref: AWS::Region
+        - Ref: AWS::AccountId
+        - fpw-pwhint-store-request
+
+functions:
+  fpw-publish-pwhint-store-event:
+    name: 'fpw-publish-pwhint-store-event'
+    handler: handler.publishPwhintStoreEvent
+    # role: PublishPwhintStoreEventRole
+    environment:
+      SNS_TOPIC_ARN: ${self:custom.snsTopicArn}
+      VERBOSE: 'true'
+    events:
+      - http:
+          path: v1/hints
+          method: put
+          cors: true
+
+resources:
+  Resources:
+    StoreRequestSNSEvent:
+      Type: AWS::SNS::Topic
+      Properties: 
+        DisplayName: fpw-pwhint-store-request
+        TopicName: fpw-pwhint-store-request
