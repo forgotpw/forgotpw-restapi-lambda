@@ -31,35 +31,38 @@ provider:
 
 plugins:
   - serverless-export-env
+  - serverless-mocha-plugin
 
 package:
   exclude:
     - .env
 
-custom:
-  snsTopicArn:
-    Fn::Join:
-      - ':'
-      - - arn
-        - aws
-        - sns
-        - Ref: AWS::Region
-        - Ref: AWS::AccountId
-        - fpw-pwhint-store-request
+# custom:
+#   snsTopicArn:
+#     Fn::Join:
+#       - ':'
+#       - - arn
+#         - aws
+#         - sns
+#         - Ref: AWS::Region
+#         - Ref: AWS::AccountId
+#         - fpw-pwhint-store-request
 
 functions:
-  fpw-publish-pwhint-store-event:
-    name: 'fpw-publish-pwhint-store-event'
-    handler: handler.publishPwhintStoreEvent
-    # role: PublishPwhintStoreEventRole
+  fpw-pwhint-api:
+    name: 'fpw-pwhint-api'
+    handler: index.handler
     environment:
-      SNS_TOPIC_ARN: ${self:custom.snsTopicArn}
+      #SNS_TOPIC_ARN: ${self:custom.snsTopicArn}
+      SNS_TOPIC_NAME: fpw-pwhint-store-request
+      AWS_REGION: us-east-1
       VERBOSE: 'true'
     events:
       - http:
           path: v1/hints
           method: put
           cors: true
+          integration: lambda
 
 resources:
   Resources:

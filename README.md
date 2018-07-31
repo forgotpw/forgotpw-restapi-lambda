@@ -1,6 +1,6 @@
-# Pwhint store publish lambda function
+# Pwhint API lambda
 
-Publishes a SNS event to store a password hint.  Intended to be hooked up to the REST route from API Gateway.
+API Gateway endpoints for api.forgotpw.com/v1/hint resources.
 
 ## Setup
 
@@ -63,9 +63,15 @@ Initial setup:
 ```shell
 cd src
 serverless invoke local \
-    -f fpw-publish-pwhint-store-event \
+    -f fpw-pwhint-api \
     -p ../events/ApiGatewayEvent.json \
     -l
+```
+
+## Usage - Invoke Integration Tests
+
+```shell
+sls invoke test -f fpw-pwhint-api
 ```
 
 ## Usage - View Logs
@@ -74,7 +80,7 @@ Tail log output from Lambda running in AWS:
 
 ```shell
 cd src
-serverless logs -f fpw-publish-pwhint-store-event -l \
+serverless logs -f fpw-pwhint-api -l \
     --awsEnv dev \
     --aws-profile fpwdev \
     -t
