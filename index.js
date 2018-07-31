@@ -1,6 +1,6 @@
 'use strict';
 
-const PwhintApiService = require('./pwhintApiService')
+const PwhintApiService = require('./pwhintApiService/pwhintApiService')
 
 async function handler(event, context, done) {
 

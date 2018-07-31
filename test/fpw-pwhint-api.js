@@ -7,7 +7,7 @@ const mochaPlugin = require('serverless-mocha-plugin');
 const expect = mochaPlugin.chai.expect;
 let wrapped = mochaPlugin.getWrapper('fpw-pwhint-api', '/index.js', 'handler');
 
-const eventData = require('../../events/ApiGatewayEvent.json')
+const eventData = require('../events/ApiGatewayEvent.json')
 
 describe('fpw-pwhint-api', () => {
   before((done) => {

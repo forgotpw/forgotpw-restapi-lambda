@@ -11,7 +11,6 @@ Install the Serverless CLI.
 npm install serverless -g
 
 # create the .env file for use with invoke local
-cd src
 npm install serverless-export-env --save-dev
 # serverless invoke local has a bug with environment variables
 # https://github.com/serverless/serverless/issues/3080
@@ -64,10 +63,9 @@ Initial setup:
 # ensure we are matching the version of node used by lambda
 nvm use 8.10.0
 
-cd src
 sls invoke local \
     -f fpw-pwhint-api \
-    -p ../events/ApiGatewayEvent.json \
+    -p ./events/ApiGatewayEvent.json \
     -l
 ```
 
@@ -91,7 +89,6 @@ curl -X PUT \
 Tail log output from Lambda running in AWS:
 
 ```shell
-cd src
 sls logs -f fpw-pwhint-api -l \
     --awsEnv dev \
     --aws-profile fpwdev \
