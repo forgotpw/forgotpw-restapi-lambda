@@ -6,8 +6,7 @@ async function handler(event, context, done) {
 
   const pwhintApiService = new PwhintApiService()
   
-  //console.log(event)
-  switch (event.httpMethod) {
+  switch (event.method) {
     case 'PUT':
       let response = await pwhintApiService.publishStoreEvent(
         event.body.hint,
@@ -20,7 +19,7 @@ async function handler(event, context, done) {
       done(null, {
         statusCode: 500,
         body: JSON.stringify({
-          message: `Unhandled API request method: ${event.httpMethod}`
+          message: `Unhandled API request method: ${event.method}`
         })
       })
       break

@@ -1,9 +1,7 @@
-// TODO: REMOVE DOTENV
-require("dotenv").config({ path: ".env" })
-
+const config = require('./config')
 const AWS = require('aws-sdk');
-AWS.config.update({region: process.env.AWS_REGION});
-let VERBOSE = (process.env.VERBOSE == 'true') || false
+AWS.config.update({region: config.AWS_REGION});
+let VERBOSE = (config.VERBOSE == 'true') || false
 
 class PwhintApiService {
   constructor() {}
@@ -11,11 +9,9 @@ class PwhintApiService {
   async publishStoreEvent(hint, application, phone) {
     let response = {}, message = {}
     try {
-      if (!process.env.SNS_TOPIC_NAME) {
+      if (!config.SNS_TOPIC_NAME) {
         throw new Error('SNS_TOPIC_NAME environment variable missing!')
       }
-      //console.log(event)
-      //console.log(process.env)
   
       message = {
         action: 'store',
@@ -53,11 +49,11 @@ class PwhintApiService {
     }
   
     try {
-      await publishToSns(JSON.stringify(message), process.env.SNS_TOPIC_NAME)
+      await publishToSns(JSON.stringify(message), config.SNS_TOPIC_NAME)
       response = {
         statusCode: 200,
         body: JSON.stringify({
-          message: `Successfully posted to topic: ${process.env.SNS_TOPIC_NAME}`
+          message: `Successfully posted to topic: ${config.SNS_TOPIC_NAME}`
         })
       }
     }
@@ -85,7 +81,7 @@ async function getAwsAccountId() {
 
 async function publishToSns(message, snsTopicName) {
   const awsAccountId = await getAwsAccountId()
-  const arn = `arn:aws:sns:${process.env.AWS_REGION}:${awsAccountId}:${snsTopicName.trim()}`
+  const arn = `arn:aws:sns:${config.AWS_REGION}:${awsAccountId}:${snsTopicName.trim()}`
   let params = {
     Message: message,
     TopicArn: arn

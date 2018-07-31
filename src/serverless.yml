@@ -1,7 +1,7 @@
-service: pwhint-store-publish
+service: pwhint-api
 
 # pin to a specific Serverless version
-# frameworkVersion: "=1.28.0"
+# frameworkVersion: "=1.29.1"
 
 provider:
   name: aws
@@ -30,7 +30,6 @@ provider:
             - 'fpw-pwhint-store-request'
 
 plugins:
-  - serverless-export-env
   - serverless-mocha-plugin
 
 package:
@@ -55,7 +54,6 @@ functions:
     environment:
       #SNS_TOPIC_ARN: ${self:custom.snsTopicArn}
       SNS_TOPIC_NAME: fpw-pwhint-store-request
-      AWS_REGION: us-east-1
       VERBOSE: 'true'
     events:
       - http:

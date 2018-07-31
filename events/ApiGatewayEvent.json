@@ -46,6 +46,6 @@
     "CloudFront-Forwarded-Proto": "https",
     "Accept-Encoding": "gzip, deflate, sdch"
   },
-  "httpMethod": "PUT",
+  "method": "PUT",
   "path": "/hints"
 }

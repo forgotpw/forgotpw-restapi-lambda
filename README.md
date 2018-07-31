@@ -49,7 +49,7 @@ export AWS_SDK_LOAD_CONFIG=1
 ## Usage - Deploy
 
 ```shell
-serverless \
+sls \
     deploy \
     --aws-profile fpwdev \
     --awsEnv dev \
@@ -61,8 +61,11 @@ serverless \
 Initial setup:
 
 ```shell
+# ensure we are matching the version of node used by lambda
+nvm use 8.10.0
+
 cd src
-serverless invoke local \
+sls invoke local \
     -f fpw-pwhint-api \
     -p ../events/ApiGatewayEvent.json \
     -l
@@ -74,13 +77,22 @@ serverless invoke local \
 sls invoke test -f fpw-pwhint-api
 ```
 
+## Usage - Test Live Endpoints
+
+```shell
+curl -X PUT \
+    --header "Content-Type: application/json" \
+    -d '{"hint": "myhint", "application": "myapp", "phone": "609-555-1212"}' \
+    https://api-dev.forgotpw.com/v1/hints
+```
+
 ## Usage - View Logs
 
 Tail log output from Lambda running in AWS:
 
 ```shell
 cd src
-serverless logs -f fpw-pwhint-api -l \
+sls logs -f fpw-pwhint-api -l \
     --awsEnv dev \
     --aws-profile fpwdev \
     -t
