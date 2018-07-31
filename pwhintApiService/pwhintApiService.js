@@ -1,7 +1,7 @@
 const config = require('../config')
 const AWS = require('aws-sdk');
 AWS.config.update({region: config.AWS_REGION});
-let VERBOSE = (config.VERBOSE == 'true') || false
+const logger = require('../logger')
 
 class PwhintApiService {
   constructor() {}
@@ -24,7 +24,7 @@ class PwhintApiService {
       // don't let the pw hints slip out in the logs
       let obfuscatedMessage = JSON.parse(JSON.stringify(message));
       obfuscatedMessage.hint = `(removed ${message.hint.length} chars)`
-      VERBOSE && console.debug('Message:\n', obfuscatedMessage)
+      logger.debug('Message:\n', obfuscatedMessage)
     }
     catch (err) {
       return {
@@ -37,7 +37,7 @@ class PwhintApiService {
   
     try {
       validateMessage(message)
-      VERBOSE && console.log('Message validated OK')
+      logger.info('Message validated OK')
     }
     catch (err) {
       return {
@@ -89,12 +89,12 @@ async function publishToSns(message, snsTopicName) {
 
   const sns = new AWS.SNS({apiVersion: '2010-03-31'})
   try {
-    VERBOSE && console.debug(`Posting to SNS topic ${params.TopicArn}`);
+    logger.debug(`Posting to SNS topic ${params.TopicArn}`);
     let data = await sns.publish(params).promise()
-    console.log("Posted to SNS, MessageID is " + data.MessageId);
+    logger.info("Posted to SNS, MessageID is " + data.MessageId);
   }
   catch (err) {
-    console.error('Error posting to SNS topic: ', err, err.stack)
+    logger.error('Error posting to SNS topic: ', err, err.stack)
     throw err
   }
 }
@@ -108,7 +108,7 @@ function normalizePhone(rawPhone) {
     .trim()
   }
   catch (err) {
-    console.error('Error normalizing phone number: ', err)
+    logger.error('Error normalizing phone number: ', err)
     return rawPhone
   }
 }
@@ -118,7 +118,7 @@ function safeTrim(s) {
     return s.trim()
   }
   catch (err) {
-    VERBOSE && console.warn('Error in safeTrim: ', err)
+    logger.warn('Error in safeTrim: ', err)
     return s
   }
 }

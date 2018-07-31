@@ -1,8 +1,11 @@
 'use strict';
 
 const PwhintApiService = require('./pwhintApiService/pwhintApiService')
+const logger = require('./logger')
 
 async function handler(event, context, done) {
+
+  logger.debug('Received event:', event)
 
   const pwhintApiService = new PwhintApiService()
   
