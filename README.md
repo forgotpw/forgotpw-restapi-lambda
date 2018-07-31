@@ -80,7 +80,7 @@ sls invoke test -f fpw-pwhint-api
 ```shell
 curl -X PUT \
     --header "Content-Type: application/json" \
-    -d '{"hint": "myhint", "application": "myapp", "phone": "609-555-1212"}' \
+    -d '{"hint": "my hint", "application": "myapp", "phone": "609-555-1212"}' \
     https://api-dev.forgotpw.com/v1/hints
 ```
 

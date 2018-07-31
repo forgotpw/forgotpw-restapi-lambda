@@ -51,10 +51,13 @@ functions:
   fpw-pwhint-api:
     name: 'fpw-pwhint-api'
     handler: index.handler
+    package:
+      exclude:
+        - .git/**
     environment:
       #SNS_TOPIC_ARN: ${self:custom.snsTopicArn}
       SNS_TOPIC_NAME: fpw-pwhint-store-request
-      LOG_LEVEL: 'info'
+      LOG_LEVEL: 'trace'
     events:
       - http:
           path: v1/hints

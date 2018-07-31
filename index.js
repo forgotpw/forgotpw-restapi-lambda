@@ -5,7 +5,7 @@ const logger = require('./logger')
 
 async function handler(event, context, done) {
 
-  logger.debug('Received event:', event)
+  logger.trace('Received event:', JSON.stringify(event))
 
   const pwhintApiService = new PwhintApiService()
   

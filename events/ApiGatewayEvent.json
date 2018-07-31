@@ -1,51 +1,48 @@
 {
   "body": {
-    "hint": "testhint", "application": "testapplication", "phone": "609-555-1212"
-  },
-  "resource": "/{proxy+}",
-  "requestContext": {
-    "resourceId": "123456",
-    "apiId": "1234567890",
-    "resourcePath": "/{proxy+}",
-    "httpMethod": "PUT",
-    "requestId": "c6af9ac6-7b61-11e6-9a41-93e8deadbeef",
-    "accountId": "123456789012",
-    "identity": {
-      "apiKey": null,
-      "userArn": null,
-      "cognitoAuthenticationType": null,
-      "caller": null,
-      "userAgent": "Custom User Agent String",
-      "user": null,
-      "cognitoIdentityPoolId": null,
-      "cognitoIdentityId": null,
-      "cognitoAuthenticationProvider": null,
-      "sourceIp": "127.0.0.1",
-      "accountId": null
-    },
-    "stage": "live"
-  },
-  "headers": {
-    "Via": "1.1 08f323deadbeefa7af34d5feb414ce27.cloudfront.net (CloudFront)",
-    "Accept-Language": "en-US,en;q=0.8",
-    "CloudFront-Is-Desktop-Viewer": "true",
-    "CloudFront-Is-SmartTV-Viewer": "false",
-    "CloudFront-Is-Mobile-Viewer": "false",
-    "X-Forwarded-For": "127.0.0.1, 127.0.0.2",
-    "CloudFront-Viewer-Country": "US",
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-    "Upgrade-Insecure-Requests": "1",
-    "X-Forwarded-Port": "443",
-    "Host": "1234567890.execute-api.us-east-1.amazonaws.com",
-    "X-Forwarded-Proto": "https",
-    "X-Amz-Cf-Id": "cDehVQoZnx43VYQb9j2-nvCh-9z396Uhbp027Y2JvkCPNLmGJHqlaA==",
-    "X-Amzn-Trace-Id": "1-5b315739-906e026ca417201c3665b704;Root=1-5b315739-9c8d1eb852b377825b67a2f6",
-    "CloudFront-Is-Tablet-Viewer": "false",
-    "Cache-Control": "max-age=0",
-    "User-Agent": "Custom User Agent String",
-    "CloudFront-Forwarded-Proto": "https",
-    "Accept-Encoding": "gzip, deflate, sdch"
+    "hint": "my hint",
+    "application": "myapp",
+    "phone": "609-555-1212"
   },
   "method": "PUT",
-  "path": "/hints"
+  "principalId": "",
+  "stage": "live",
+  "cognitoPoolClaims": {
+    "sub": ""
+  },
+  "enhancedAuthContext": {},
+  "headers": {
+    "Accept": "*/*",
+    "CloudFront-Forwarded-Proto": "https",
+    "CloudFront-Is-Desktop-Viewer": "true",
+    "CloudFront-Is-Mobile-Viewer": "false",
+    "CloudFront-Is-SmartTV-Viewer": "false",
+    "CloudFront-Is-Tablet-Viewer": "false",
+    "CloudFront-Viewer-Country": "US",
+    "Content-Type": "application/json",
+    "Host": "api-dev.forgotpw.com",
+    "User-Agent": "curl/7.47.0",
+    "Via": "1.1 beb610ab9f85e5456cfddc72d08af581.cloudfront.net (CloudFront)",
+    "X-Amz-Cf-Id": "ZvPXAq4brE0YVEBPr0INxbf1Hh1D-DVnsap3WerVQsxeEGkiNCrTNg==",
+    "X-Amzn-Trace-Id": "Root=1-5b60cedc-f4f233e7c6e4c14dc52270f3",
+    "X-Forwarded-For": "38.142.212.250, 204.246.180.48",
+    "X-Forwarded-Port": "443",
+    "X-Forwarded-Proto": "https"
+  },
+  "query": {},
+  "path": {},
+  "identity": {
+    "cognitoIdentityPoolId": "",
+    "accountId": "",
+    "cognitoIdentityId": "",
+    "caller": "",
+    "sourceIp": "38.142.212.250",
+    "accessKey": "",
+    "cognitoAuthenticationType": "",
+    "cognitoAuthenticationProvider": "",
+    "userArn": "",
+    "userAgent": "curl/7.47.0",
+    "user": ""
+  },
+  "stageVariables": {}
 }
