@@ -17,19 +17,22 @@ async function handler(event, context, done) {
     return done(null, errorResponse(500, msg))
   }
 
+  let response
   switch (path) {
     case 'hints':
-      hintsController(event, done)
+      response = await hintsController(event, done)
       break
     default:
-      done(null, errorResponse(400,
+      response = errorResponse(400,
         `Unhandled path requested: ${path}`
-        ))
+        )
       break
   }
+
+  done(null, response)
 }
 
-async function hintsController(event, done) {
+async function hintsController(event) {
   const pwhintApiService = new PwhintApiService()
 
   switch (event.method) {
@@ -39,13 +42,12 @@ async function hintsController(event, done) {
         event.body.application,
         event.body.phone
       )
-      done(null, response)
+      return response
       break
     default:
-      done(null, errorResponse(405,
+      return errorResponse(405,
         `Unhandled API request method: ${event.method}`
-        ))
-      break
+        )
   }
 }
 
