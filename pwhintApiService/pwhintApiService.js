@@ -27,49 +27,38 @@ class PwhintApiService {
       logger.debug('Message:\n', obfuscatedMessage)
     }
     catch (err) {
-      return {
-        statusCode: 500,
-        body: JSON.stringify({
-          message: `Error building message: ${err}`
-        })
-      }
+      throw new Error(`Error building message: ${err}`)
     }
-  
+
     try {
-      validateMessage(message)
-      logger.info('Message validated OK')
+      validateStoreMessage(message)
     }
     catch (err) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({
-          message: `Error validating message: ${err}`
-        })
-      }
+      throw new Error(`Error validating message: ` + err)
     }
-  
+    
     try {
       await publishToSns(JSON.stringify(message), config.SNS_TOPIC_NAME)
-      response = {
-        statusCode: 200,
-        body: JSON.stringify({
-          message: `Successfully posted to topic: ${config.SNS_TOPIC_NAME}`
-        })
-      }
     }
     catch (err) {
-      return {
-        statusCode: 500,
-        body: JSON.stringify({
-          message: `Error publishing message: ${err}`
-        })
-      }
+      throw new Error(`Error publishing message: ${err}`)
     }
   
     return response
   }
+}
 
+function validateStoreMessage(message) {
 
+  // TODO do real validation with Joi
+
+  // NOTE: do not log message values here, raw hint/message passed in
+
+  if (!message.hint || message.hint.length <= 0) {
+    throw new Error("Message hint not supplied")
+  }
+
+  logger.info('Message validated OK')
 }
 
 async function getAwsAccountId() {
@@ -120,17 +109,6 @@ function safeTrim(s) {
   catch (err) {
     logger.warn('Error in safeTrim: ', err)
     return s
-  }
-}
-
-function validateMessage(message) {
-
-  // TODO do real validation with Joi
-
-  // NOTE: do not log message values here, raw hint/message passed in
-
-  if (!message.hint || message.hint.length <= 0) {
-    throw new Error("Message hint not supplied")
   }
 }
 

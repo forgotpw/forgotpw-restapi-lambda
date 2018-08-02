@@ -72,7 +72,7 @@ sls invoke local \
 ## Usage - Invoke Integration Tests
 
 ```shell
-sls invoke test -f fpw-pwhint-api
+sls invoke test
 ```
 
 ## Usage - Test Live Endpoints

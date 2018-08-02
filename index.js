@@ -37,11 +37,25 @@ async function hintsController(event) {
 
   switch (event.method) {
     case 'PUT':
-      let response = await pwhintApiService.publishStoreEvent(
-        event.body.hint,
-        event.body.application,
-        event.body.phone
-      )
+      try {
+        await pwhintApiService.publishStoreEvent(
+          event.body.hint,
+          event.body.application,
+          event.body.phone
+        )
+      }
+      catch (err) {
+        if (err.message.indexOf('Error validating message') > -1)
+          return errorResponse(400, err)
+        else 
+          return errorResponse(500, err)
+      }
+      let response = {
+        statusCode: 200,
+        body: JSON.stringify({
+          message: `Successfully posted event`
+        })
+      }
       return response
       break
     default:
