@@ -60,8 +60,8 @@ functions:
       LOG_LEVEL: 'trace'
     events:
       - http:
-          path: v1/hints
-          method: put
+          path: v1/{proxy+}
+          method: any
           cors: true
           integration: lambda
 
