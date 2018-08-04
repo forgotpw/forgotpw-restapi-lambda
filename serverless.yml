@@ -57,7 +57,7 @@ functions:
     environment:
       #SNS_TOPIC_ARN: ${self:custom.snsTopicArn}
       SNS_TOPIC_NAME: fpw-pwhint-store-request
-      LOG_LEVEL: 'trace'
+      LOG_LEVEL: 'debug'
     events:
       - http:
           path: v1/{proxy+}

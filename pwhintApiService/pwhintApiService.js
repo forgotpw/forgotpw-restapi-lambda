@@ -2,6 +2,7 @@ const config = require('../config')
 const AWS = require('aws-sdk');
 AWS.config.update({region: config.AWS_REGION});
 const logger = require('../logger')
+const Joi = require('joi');
 
 class PwhintApiService {
   constructor() {}
@@ -49,13 +50,20 @@ class PwhintApiService {
 }
 
 function validateStoreMessage(message) {
-
-  // TODO do real validation with Joi
-
   // NOTE: do not log message values here, raw hint/message passed in
 
-  if (!message.hint || message.hint.length <= 0) {
-    throw new Error("Message hint not supplied")
+  const schema = Joi.object().keys({
+    action: Joi.string().valid('store').required(),
+    hint: Joi.string().min(3).max(256).required(),
+    application: Joi.string().min(2).max(256).required(),
+    rawPhone: Joi.string().min(10).max(32).required(),
+    normalizedPhone: Joi.string().min(10).max(32).required()
+  })
+  const result = Joi.validate(message, schema)
+  if (result.error !== null) {
+    const msg = "Store message object invalid: " + JSON.stringify(result)
+    logger.error(msg)
+    throw new Error(msg)
   }
 
   logger.info('Message validated OK')
