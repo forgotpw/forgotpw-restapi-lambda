@@ -63,7 +63,7 @@ functions:
           path: v1/{proxy+}
           method: any
           cors: true
-          integration: lambda
+          integration: lambda-proxy
 
 resources:
   Resources:

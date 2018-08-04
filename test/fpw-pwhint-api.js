@@ -7,17 +7,12 @@ const mochaPlugin = require('serverless-mocha-plugin');
 const expect = mochaPlugin.chai.expect;
 let wrapped = mochaPlugin.getWrapper('fpw-pwhint-api', '/index.js', 'handler');
 
-const eventData = require('../events/ApiGatewayEvent.json')
+const eventData = require('../events/ValidApiGatewayRequest.json')
+const invalidEventData = require('../events/InvalidApiGatewayRequest.json')
 
 describe('fpw-pwhint-api', () => {
   before((done) => {
     done();
-  });
-
-  it('implement tests here', () => {
-    return wrapped.run({}).then((response) => {
-      expect(response).to.not.be.empty;
-    });
   });
 
   it('returns 200 for valid requests', () => {
@@ -27,9 +22,7 @@ describe('fpw-pwhint-api', () => {
   });
 
   it('returns 400 for invalid requests', () => {
-    // remove the hint from the event
-    eventData.body.hint = ''
-    return wrapped.run(eventData).then((response) => {
+    return wrapped.run(invalidEventData).then((response) => {
       expect(response.statusCode).to.equal(400);
     });
   });

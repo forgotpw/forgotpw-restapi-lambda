@@ -65,7 +65,7 @@ nvm use 8.10.0
 
 sls invoke local \
     -f fpw-pwhint-api \
-    -p ./events/ApiGatewayEvent.json \
+    -p ./events/ValidApiGatewayRequest.json \
     -l
 ```
 

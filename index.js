@@ -5,7 +5,10 @@ const logger = require('./logger')
 
 async function handler(event, context, done) {
 
-  logger.trace('Received event:', JSON.stringify(event))
+  // raw console log output easier to copy/paste json from cloudwatch logs
+  if (process.env.LOG_LEVEL == 'trace') {
+    console.log(JSON.stringify(event))
+  }
 
   let path = ''
   try {
@@ -13,43 +16,36 @@ async function handler(event, context, done) {
   }
   catch (err) {
     const msg = 'Error parsing path: ' + err
-    logger.error(msg)
-    return done(null, errorResponse(500, msg))
+    return done(null, errorResponse(err))
   }
 
-  let response
-  switch (path) {
-    case 'hints':
-      response = await hintsController(event, done)
-      break
-    default:
-      response = errorResponse(400,
-        `Unhandled path requested: ${path}`
-        )
-      break
+  try {
+    let response
+    switch (path) {
+      case '/v1/hints':
+        response = await hintsController(event, done)
+        break
+      default:
+        throw new Error(`Unhandled path requested: ${path}`)
+    }
+    done(null, response)
   }
-
-  done(null, response)
+  catch (err) {
+    done(null, errorResponse(err))
+  }
 }
 
 async function hintsController(event) {
   const pwhintApiService = new PwhintApiService()
 
-  switch (event.method) {
+  switch (event.httpMethod) {
     case 'PUT':
-      try {
-        await pwhintApiService.publishStoreEvent(
-          event.body.hint,
-          event.body.application,
-          event.body.phone
-        )
-      }
-      catch (err) {
-        if (err.message.indexOf('Error validating message') > -1)
-          return errorResponse(400, err)
-        else 
-          return errorResponse(500, err)
-      }
+      const body = JSON.parse(event.body)
+      await pwhintApiService.publishStoreEvent(
+        body.hint,
+        body.application,
+        body.phone
+      )
       let response = {
         statusCode: 200,
         body: JSON.stringify({
@@ -57,27 +53,37 @@ async function hintsController(event) {
         })
       }
       return response
-      break
     default:
-      return errorResponse(405,
-        `Unhandled API request method: ${event.method}`
-        )
+      throw new Error(`Unhandled method requested: ${event.method}`)
   }
 }
 
-function errorResponse(statusCode, message) {
+function errorResponse(err) {
+  const errMappings = [
+    { httpStatus: 400, errStartsWith: 'Error validating message' },
+    { httpStatus: 405, errStartsWith: 'Unhandled path requested' },
+    { httpStatus: 405, errStartsWith: 'Unhandled method requested' }
+  ]
+  let statusCode = 500
+  // surely there is a more efficient way but ...
+  for (let errMapping of errMappings) {
+    if (err.message.indexOf(errMapping.errStartsWith) > -1)
+      statusCode = errMapping.httpStatus
+      break
+  }
+  logger.error(err)
   return {
     statusCode: statusCode,
     body: JSON.stringify({
-      message: message
+      message: err
     })
   }
 }
 
 function parsePath(event) {
   let path = ''
-  logger.trace('event.path.proxy: ', event.path.proxy)
-  path = event.path.proxy.trim().toLowerCase()
+  logger.trace('event.path: ', event.path)
+  path = event.path.trim().toLowerCase()
 
   if (!path || path.length <= 0) {
     throw new Error('Path is unspecified')
