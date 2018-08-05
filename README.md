@@ -9,15 +9,6 @@ Install the Serverless CLI.
 ```shell
 # install the serverless framework
 npm install serverless -g
-
-# create the .env file for use with invoke local
-npm install serverless-export-env --save-dev
-# serverless invoke local has a bug with environment variables
-# https://github.com/serverless/serverless/issues/3080
-# serverless-export-env plugin takes the environment variables defines
-# in serverless.yml for the lambda function and creates the .env file
-# https://github.com/arabold/serverless-export-env
-serverless export-env
 ```
 
 ## Usage - Prep Environment
