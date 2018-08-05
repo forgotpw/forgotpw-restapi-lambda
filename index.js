@@ -38,21 +38,32 @@ async function handler(event, context, done) {
 async function hintsController(event) {
   const pwhintApiService = new PwhintApiService()
 
+  logger.trace(`event.httpMethod: ${event.httpMethod}, event.body: ${event.body}`)
+  const body = JSON.parse(event.body)
   switch (event.httpMethod) {
     case 'PUT':
-      const body = JSON.parse(event.body)
       await pwhintApiService.publishStoreEvent(
         body.hint,
         body.application,
         body.phone
       )
-      let response = {
+      return {
         statusCode: 200,
         body: JSON.stringify({
           message: `Successfully posted event`
         })
       }
-      return response
+    case 'POST':
+      await pwhintApiService.publishRetrieveEvent(
+        body.application,
+        body.phone
+      )
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          message: `Successfully posted event`
+        })
+      }
     default:
       throw new Error(`Unhandled method requested: ${event.method}`)
   }

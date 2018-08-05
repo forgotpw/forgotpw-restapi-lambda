@@ -65,7 +65,7 @@ nvm use 8.10.0
 
 sls invoke local \
     -f fpw-pwhint-api \
-    -p ./events/ValidApiGatewayRequest.json \
+    -p ./events/ValidStoreGatewayRequest.json \
     -l
 ```
 
@@ -78,9 +78,16 @@ sls invoke test
 ## Usage - Test Live Endpoints
 
 ```shell
+# request storing a password
 curl -X PUT \
     --header "Content-Type: application/json" \
     -d '{"hint": "my hint", "application": "myapp", "phone": "609-555-1212"}' \
+    https://api-dev.forgotpw.com/v1/hints
+
+# request retrieving a password
+curl -X POST \
+    --header "Content-Type: application/json" \
+    -d '{"application": "myapp", "phone": "609-555-1212"}' \
     https://api-dev.forgotpw.com/v1/hints
 ```
 
