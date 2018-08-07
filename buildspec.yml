@@ -9,6 +9,7 @@ phases:
   build:
     commands:
       - echo Exporting environment variables
-      - source exports.sh api-dev default
+      - chmod +x ./exports.sh
+      - . ./exports.sh api-dev default
       - echo Invoking test
       - sls invoke test
