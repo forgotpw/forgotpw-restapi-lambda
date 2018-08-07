@@ -3,13 +3,10 @@ version: 0.2
 phases:
   install:
     commands:
-      - echo Installing prerequisites...
       - npm install serverless -g
-      - aws --version
   build:
     commands:
-      - echo Exporting environment variables
+      - npm install
       - chmod +x ./exports.sh
       - . ./exports.sh api-dev default
-      - echo Invoking test
       - sls invoke test
