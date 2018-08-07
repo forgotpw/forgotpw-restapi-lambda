@@ -1,3 +1,4 @@
+#!/bin/bash
 echo "Exporting serverless environment variables using hostname $1.forgotpw.com AWS profile $2..."
 export REST_API_ID=$( \
   aws apigateway get-rest-apis \

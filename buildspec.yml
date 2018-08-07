@@ -8,5 +8,5 @@ phases:
     commands:
       - npm install
       - chmod +x ./exports.sh
-      - . ./exports.sh api-dev default
+      - . ./exports.sh "api-dev" "default"
       - sls invoke test
