@@ -4,6 +4,7 @@ phases:
   install:
     commands:
       - npm install serverless -g
+      - pip install awscli
   build:
     commands:
       - npm install
