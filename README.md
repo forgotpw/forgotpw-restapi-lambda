@@ -16,24 +16,8 @@ npm install serverless -g
 The following environment variables must be exported before *ALL CALLS* to the serverless framework!
 
 ```shell
-export REST_API_ID=$( \
-    aws apigateway get-rest-apis \
-        --query 'items[?name==`api-dev.forgotpw.com`].[id]' \
-        --output text \
-        --profile fpwdev)
-export ROOT_RESOURCE_ID=$( \
-    aws apigateway get-resources \
-        --rest-api-id $REST_API_ID \
-        --query 'items[?path==`/`].[id]' \
-        --output text \
-        --profile fpwdev)
-export V1_RESOURCE_ID=$( \
-    aws apigateway get-resources \
-        --rest-api-id $REST_API_ID \
-        --query 'items[?path==`/v1`].[id]' \
-        --output text \
-        --profile fpwdev)
-export AWS_SDK_LOAD_CONFIG=1
+# will export environment variables needed for serverless.yml
+source ./exports.sh
 ```
 
 ## Usage - Deploy

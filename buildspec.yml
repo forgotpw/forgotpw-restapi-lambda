@@ -1,0 +1,13 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo Installing prerequisites...
+      - npm install serverless -g
+  build:
+    commands:
+      - echo Exporting environment variables
+      - source ./exports.sh
+      - echo Invoking test
+      - sls invoke test
