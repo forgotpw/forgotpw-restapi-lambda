@@ -17,7 +17,7 @@ The following environment variables must be exported before *ALL CALLS* to the s
 
 ```shell
 # will export environment variables needed for serverless.yml
-source ./exports.sh
+source ./exports.sh api-dev fpwdev
 ```
 
 ## Usage - Deploy

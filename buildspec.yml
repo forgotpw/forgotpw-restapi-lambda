@@ -5,10 +5,10 @@ phases:
     commands:
       - echo Installing prerequisites...
       - npm install serverless -g
+      - aws --version
   build:
     commands:
       - echo Exporting environment variables
-      - ls -al
-      - source exports.sh
+      - source exports.sh api-dev default
       - echo Invoking test
       - sls invoke test
