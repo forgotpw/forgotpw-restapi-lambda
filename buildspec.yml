@@ -8,6 +8,7 @@ phases:
   build:
     commands:
       - echo Exporting environment variables
-      - source ./exports.sh
+      - ls -al
+      - source exports.sh
       - echo Invoking test
       - sls invoke test
