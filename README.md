@@ -77,3 +77,38 @@ sls logs -f fpw-pwhint-api -l \
     -t
 ```
 
+## Usage - Setup CI Environment
+
+AWS CodeBuild needs a docker image to use for building, testing, and deploying the lambda function.  These steps build that environment and upload it to AWS for use with CodeBuild.
+
+```shell
+# build the docker image for the dev build environment
+docker build -t forgotpw/restapi-lambda:build .
+
+# create the docker repository
+aws ecr create-repository \
+    --repository-name forgotpw/restapi-lambda \
+    --profile fpwdev
+
+# allow codebuild access to pull from this ecr repo
+aws ecr set-repository-policy \
+	--repository-name forgotpw/restapi-lambda \
+	--policy-text "$(cat ecr-repository-policy.json)" \
+    --profile fpwdev
+
+# authenticate local docker client with remote ecr repository
+CMD=$(aws ecr get-login \
+    --no-include-email \
+    --region us-east-1 \
+    --profile fpwdev)
+eval $CMD
+
+# tag the image so it can be pushed to the repository
+docker tag \
+    forgotpw/restapi-lambda:build \
+    478543871670.dkr.ecr.us-east-1.amazonaws.com/forgotpw/restapi-lambda:build
+
+# push to the remote repository
+docker push \
+    478543871670.dkr.ecr.us-east-1.amazonaws.com/forgotpw/restapi-lambda:build
+```
