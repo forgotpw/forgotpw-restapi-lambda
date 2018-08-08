@@ -1,5 +1,7 @@
 # Pwhint API lambda
 
+![Build Status](https://codebuild.us-east-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiUExHL1p4WDF2L2ZXSkRJbUdzckIrWWIrVUQxTVdGR0tTRklZakxLVVJVblJMK0dZbGdOcTFZeFVTNnBPczZTWVNJVHVXWXhPYnBWLzhpS2dXWlowRmZjPSIsIml2UGFyYW1ldGVyU3BlYyI6ImNUQ2VYd2EvZ1BOZW9vemUiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=develop)
+
 API Gateway endpoints for api.forgotpw.com/v1/hint resources.
 
 ## Setup
