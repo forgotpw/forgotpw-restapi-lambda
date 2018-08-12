@@ -49,7 +49,7 @@ functions:
     environment:
       STORE_SNS_TOPIC_NAME: fpw-pwhint-store-request
       RETRIEVE_SNS_TOPIC_NAME: fpw-pwhint-retrieve-request
-      LOG_LEVEL: 'trace'
+      LOG_LEVEL: 'debug'
     events:
       - http:
           path: v1/{proxy+}
