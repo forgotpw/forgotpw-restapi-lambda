@@ -9,4 +9,4 @@ phases:
   post_build:
     commands:
       - chmod +x ./deploy.sh
-      - ./deploy.sh api-dev dev
+      - ./deploy.sh
