@@ -11,7 +11,7 @@ Install the Serverless CLI.
 npm install serverless -g
 ```
 
-## Usage - Deploy
+## Deploy
 
 ```shell
 # will export environment variables needed for serverless.yml
@@ -24,7 +24,7 @@ sls \
     --verbose
 ```
 
-## Usage - Invoke Locally
+## Invoke Locally
 
 Initial setup:
 
@@ -41,7 +41,7 @@ sls invoke local \
     -l
 ```
 
-## Usage - Invoke Integration Tests
+## Invoke Integration Tests
 
 ```shell
 # will export environment variables needed for serverless.yml
@@ -50,7 +50,7 @@ source ./exports.sh api-dev fpwdev
 sls invoke test
 ```
 
-## Usage - Test Live Endpoints
+## Test Live Endpoints
 
 ```shell
 # request storing a password
@@ -66,7 +66,7 @@ curl -X POST \
     https://api-dev.forgotpw.com/v1/hints
 ```
 
-## Usage - View Logs
+## View Logs
 
 Tail log output from Lambda running in AWS:
 
@@ -77,7 +77,7 @@ sls logs -f fpw-pwhint-api -l \
     -t
 ```
 
-## Usage - Setup CI Environment
+## Setup CI Environment
 
 AWS CodeBuild needs a docker image to use for building, testing, and deploying the lambda function.  These steps build that environment and upload it to AWS for use with CodeBuild.
 
