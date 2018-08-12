@@ -59,30 +59,6 @@ functions:
 
 resources:
   Resources:
-    # CodeBuildProject:
-    #   Type: AWS::CodeBuild::Project
-    #   Properties:
-    #     Name: !Ref ProjectName
-    #     ServiceRole:
-    #       - Fn::Join:
-    #         - ':'
-    #         - - arn
-    #           - aws
-    #           - iam
-    #           - ''
-    #           - Ref: AWS::AccountId
-    #           - role/service-role/codebuild-service-role
-    #     Artifacts:
-    #       Type: CODEPIPELINE
-    #     Environment:
-    #       Type: linuxContainer
-    #       # ComputeType options: BUILD_GENERAL1_SMALL, BUILD_GENERAL1_MEDIUM, BUILD_GENERAL1_LARGE
-    #       ComputeType: BUILD_GENERAL1_SMALL
-    #       # Run `aws codebuild list-curated-environment-images` for a complete list of images provided.
-    #       Image: aws/codebuild/nodejs:8.11.0
-    #     Source:
-    #       Type: CODEPIPELINE
-    #     TimeoutInMinutes: 10
     StoreRequestSNSEvent:
       Type: AWS::SNS::Topic
       Properties: 
