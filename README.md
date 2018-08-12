@@ -112,3 +112,9 @@ docker tag \
 docker push \
     478543871670.dkr.ecr.us-east-1.amazonaws.com/forgotpw/restapi-lambda:build
 ```
+
+# License
+
+GNU General Public License v3.0
+
+See [LICENSE](LICENSE.txt) to see the full text.
