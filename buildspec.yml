@@ -5,4 +5,8 @@ phases:
     commands:
       - npm install
       - chmod +x ./test.sh
-      - ./test.sh api-dev
+      - ./test.sh
+  post_build:
+    commands:
+      - chmod +x ./deploy.sh
+      - ./deploy.sh api-dev dev

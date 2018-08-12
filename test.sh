@@ -1,8 +1,11 @@
 #!/bin/bash
-echo "Exporting serverless environment variables using hostname $1.forgotpw.com..."
+[ -z "$API_SUBDOMAIN" ] && echo "Need to set API_SUBDOMAIN (e.g. api-dev)" && exit 1;
+
+echo "Exporting serverless environment variables using hostname $API_SUBDOMAIN.forgotpw.com..."
+
 export REST_API_ID=$( \
     aws apigateway get-rest-apis \
-      --query 'items[?name==`'"$1"'.forgotpw.com`].[id]' \
+      --query 'items[?name==`'"$API_SUBDOMAIN"'.forgotpw.com`].[id]' \
       --output text)
 echo "REST_API_ID: $REST_API_ID"
 export ROOT_RESOURCE_ID=$( \
