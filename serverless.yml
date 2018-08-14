@@ -40,8 +40,8 @@ plugins:
   - serverless-mocha-plugin
 
 functions:
-  fpw-pwhint-api:
-    name: 'fpw-pwhint-api'
+  fpw-pwhint-restapi:
+    name: 'fpw-pwhint-restapi'
     handler: index.handler
     package:
       exclude:

@@ -36,7 +36,7 @@ nvm use 8.10.0
 source ./exports.sh api-dev fpwdev
 
 sls invoke local \
-    -f fpw-pwhint-api \
+    -f fpw-pwhint-restapi \
     -p ./events/ValidStoreGatewayRequest.json \
     -l
 ```
@@ -71,7 +71,7 @@ curl -X POST \
 Tail log output from Lambda running in AWS:
 
 ```shell
-sls logs -f fpw-pwhint-api -l \
+sls logs -f fpw-pwhint-restapi -l \
     --awsEnv dev \
     --aws-profile fpwdev \
     -t
