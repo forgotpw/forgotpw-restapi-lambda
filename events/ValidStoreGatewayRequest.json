@@ -1,6 +1,6 @@
 {
   "resource": "/v1/{proxy+}",
-  "path": "/v1/hints",
+  "path": "/v1/secrets",
   "httpMethod": "PUT",
   "headers": {
       "Accept": "*/*",
@@ -22,7 +22,7 @@
   },
   "queryStringParameters": null,
   "pathParameters": {
-      "proxy": "hints"
+      "proxy": "secrets"
   },
   "stageVariables": null,
   "requestContext": {
@@ -31,7 +31,7 @@
       "httpMethod": "PUT",
       "extendedRequestId": "LGnKlFIsIAMFvQw=",
       "requestTime": "04/Aug/2018:14:31:06 +0000",
-      "path": "/v1/hints",
+      "path": "/v1/secrets",
       "accountId": "478543871670",
       "protocol": "HTTP/1.1",
       "stage": "live",

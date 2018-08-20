@@ -11,7 +11,7 @@ if (process.stdout.isTTY) {
 }
 
 module.exports = bunyan.createLogger({
-    name: 'pwhint-service',
+    name: 'fpw-restapi-service',
     streams: [
         {
             level: config.LOG_LEVEL,

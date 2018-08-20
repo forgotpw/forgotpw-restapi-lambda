@@ -1,4 +1,4 @@
-service: pwhint-api
+service: secrets-api
 
 # pin to a specific Serverless version
 # frameworkVersion: "=1.29.1"
@@ -27,28 +27,28 @@ provider:
             - 'arn:aws:sns'
             - Ref: 'AWS::Region'
             - Ref: 'AWS::AccountId'
-            - 'fpw-pwhint-store-request'
+            - 'fpw-secret-store-request'
         - 'Fn::Join':
           - ':'
           -
             - 'arn:aws:sns'
             - Ref: 'AWS::Region'
             - Ref: 'AWS::AccountId'
-            - 'fpw-pwhint-retrieve-request'
+            - 'fpw-secret-retrieve-request'
 
 plugins:
   - serverless-mocha-plugin
 
 functions:
-  fpw-pwhint-restapi:
-    name: 'fpw-pwhint-restapi'
+  fpw-restapi:
+    name: 'fpw-restapi'
     handler: index.handler
     package:
       exclude:
         - .git/**
     environment:
-      STORE_SNS_TOPIC_NAME: fpw-pwhint-store-request
-      RETRIEVE_SNS_TOPIC_NAME: fpw-pwhint-retrieve-request
+      STORE_SNS_TOPIC_NAME: fpw-secret-store-request
+      RETRIEVE_SNS_TOPIC_NAME: fpw-secret-retrieve-request
       LOG_LEVEL: 'debug'
     events:
       - http:
@@ -62,10 +62,10 @@ resources:
     StoreRequestSNSEvent:
       Type: AWS::SNS::Topic
       Properties: 
-        DisplayName: fpw-pwhint-store-request
-        TopicName: fpw-pwhint-store-request
+        DisplayName: fpw-secret-store-request
+        TopicName: fpw-secret-store-request
     RetrieveRequestSNSEvent:
       Type: AWS::SNS::Topic
       Properties: 
-        DisplayName: fpw-pwhint-retrieve-request
-        TopicName: fpw-pwhint-retrieve-request
+        DisplayName: fpw-secret-retrieve-request
+        TopicName: fpw-secret-retrieve-request

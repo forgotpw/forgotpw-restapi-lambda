@@ -4,7 +4,7 @@ AWS.config.update({region: config.AWS_REGION});
 const logger = require('../logger')
 const Joi = require('joi');
 
-class PwhintApiService {
+class SecretsApiService {
   constructor() {}
 
   async publishStoreEvent(hint, application, phone) {
@@ -175,4 +175,4 @@ function safeTrim(s) {
   }
 }
 
-module.exports = PwhintApiService
+module.exports = SecretsApiService

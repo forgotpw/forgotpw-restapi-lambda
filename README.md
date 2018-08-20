@@ -1,4 +1,4 @@
-# Pwhint API lambda
+# ForgotPW REST API Lambda
 
 API Gateway REST endpoints for api.forgotpw.com/v1/.
 
@@ -36,7 +36,7 @@ nvm use 8.10.0
 source ./exports.sh api-dev fpwdev
 
 sls invoke local \
-    -f fpw-pwhint-restapi \
+    -f fpw-restapi \
     -p ./events/ValidStoreGatewayRequest.json \
     -l
 ```
@@ -57,13 +57,13 @@ sls invoke test
 curl -X PUT \
     --header "Content-Type: application/json" \
     -d '{"hint": "my hint", "application": "myapp", "phone": "609-555-1212"}' \
-    https://api-dev.forgotpw.com/v1/hints
+    https://api-dev.forgotpw.com/v1/secrets
 
 # request retrieving a password
 curl -X POST \
     --header "Content-Type: application/json" \
     -d '{"application": "myapp", "phone": "609-555-1212"}' \
-    https://api-dev.forgotpw.com/v1/hints
+    https://api-dev.forgotpw.com/v1/secrets
 ```
 
 ## View Logs
@@ -71,7 +71,7 @@ curl -X POST \
 Tail log output from Lambda running in AWS:
 
 ```shell
-sls logs -f fpw-pwhint-restapi -l \
+sls logs -f fpw-restapi -l \
     --awsEnv dev \
     --aws-profile fpwdev \
     -t

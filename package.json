@@ -1,5 +1,5 @@
 {
-  "name": "pwhint-api-lambda",
+  "name": "secrets-api-lambda",
   "private": true,
   "version": "0.0.2",
   "main": "handler.js",

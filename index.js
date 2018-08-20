@@ -1,6 +1,6 @@
 'use strict';
 
-const PwhintApiService = require('./pwhintApiService/pwhintApiService')
+const SecretsApiService = require('./secretsApiService/secretsApiService')
 const logger = require('./logger')
 
 async function handler(event, context, done) {
@@ -22,8 +22,8 @@ async function handler(event, context, done) {
   try {
     let response
     switch (path) {
-      case '/v1/hints':
-        response = await hintsController(event, done)
+      case '/v1/secrets':
+        response = await secretsController(event, done)
         break
       default:
         throw new Error(`Unhandled path requested: ${path}`)
@@ -35,14 +35,14 @@ async function handler(event, context, done) {
   }
 }
 
-async function hintsController(event) {
-  const pwhintApiService = new PwhintApiService()
+async function secretsController(event) {
+  const secretsApiService = new SecretsApiService()
 
   logger.trace(`event.httpMethod: ${event.httpMethod}, event.body: ${event.body}`)
   const body = JSON.parse(event.body)
   switch (event.httpMethod) {
     case 'PUT':
-      await pwhintApiService.publishStoreEvent(
+      await secretsApiService.publishStoreEvent(
         body.hint,
         body.application,
         body.phone
@@ -54,7 +54,7 @@ async function hintsController(event) {
         })
       }
     case 'POST':
-      await pwhintApiService.publishRetrieveEvent(
+      await secretsApiService.publishRetrieveEvent(
         body.application,
         body.phone
       )
