@@ -1,7 +1,7 @@
 service: secrets-api
 
 # pin to a specific Serverless version
-# frameworkVersion: "=1.29.1"
+frameworkVersion: ">=1.2.0 <2.0.0"
 
 provider:
   name: aws
@@ -39,13 +39,14 @@ provider:
 plugins:
   - serverless-mocha-plugin
 
+package:
+  exclude:
+    - .git/**
+
 functions:
   fpw-restapi:
     name: 'fpw-restapi'
     handler: index.handler
-    package:
-      exclude:
-        - .git/**
     environment:
       STORE_SNS_TOPIC_NAME: fpw-secret-store-request
       RETRIEVE_SNS_TOPIC_NAME: fpw-secret-retrieve-request
