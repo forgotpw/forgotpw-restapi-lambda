@@ -51,7 +51,8 @@ async function secretsController(event) {
         statusCode: 200,
         body: JSON.stringify({
           message: `Successfully posted event`
-        })
+        }),
+        headers: { 'Access-Control-Allow-Origin': '*' }
       }
     case 'POST':
       await secretsApiService.publishRetrieveEvent(
@@ -62,7 +63,8 @@ async function secretsController(event) {
         statusCode: 200,
         body: JSON.stringify({
           message: `Successfully posted event`
-        })
+        }),
+        headers: { 'Access-Control-Allow-Origin': '*' }
       }
     default:
       throw new Error(`Unhandled method requested: ${event.method}`)
