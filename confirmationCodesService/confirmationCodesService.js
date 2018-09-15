@@ -6,7 +6,7 @@ const helpers = require('../snsServiceHelpers')
 class ConfirmationCodesService {
   constructor() {}
 
-  async publishSendCodeEvent(hint, application, phone) {
+  async publishSendCodeEvent(application, phone) {
     let response = {}, message = {}
     try {
       if (!config.SENDCODE_SNS_TOPIC_NAME) {
