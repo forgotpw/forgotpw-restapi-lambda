@@ -1,6 +1,7 @@
 'use strict';
 
 const SecretsApiService = require('./secretsApiService/secretsApiService')
+const ConfirmationCodesService = require('./confirmationCodesService/confirmationCodesService')
 const logger = require('./logger')
 
 async function handler(event, context, done) {
@@ -19,11 +20,16 @@ async function handler(event, context, done) {
     return done(null, errorResponse(err))
   }
 
+  logger.trace(`event.httpMethod: ${event.httpMethod}, event.body: ${event.body}`)
+
   try {
     let response
     switch (path) {
       case '/v1/secrets':
         response = await secretsController(event, done)
+        break
+      case '/v1/codes':
+        response = await codesController(event, done)
         break
       default:
         throw new Error(`Unhandled path requested: ${path}`)
@@ -38,7 +44,6 @@ async function handler(event, context, done) {
 async function secretsController(event) {
   const secretsApiService = new SecretsApiService()
 
-  logger.trace(`event.httpMethod: ${event.httpMethod}, event.body: ${event.body}`)
   const body = JSON.parse(event.body)
   switch (event.httpMethod) {
     case 'PUT':
@@ -59,6 +64,31 @@ async function secretsController(event) {
       }
     case 'POST':
       await secretsApiService.publishRetrieveEvent(
+        body.application,
+        body.phone
+      )
+      return {
+        statusCode: 200,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Credentials': true,
+        },
+        body: JSON.stringify({
+          message: `Successfully posted event`
+        })
+      }
+    default:
+      throw new Error(`Unhandled method requested: ${event.method}`)
+  }
+}
+
+async function codesController(event) {
+  const confirmationCodesService = new ConfirmationCodesService()
+
+  const body = JSON.parse(event.body)
+  switch (event.httpMethod) {
+    case 'POST':
+      await confirmationCodesService.publishSendCodeEvent(
         body.application,
         body.phone
       )

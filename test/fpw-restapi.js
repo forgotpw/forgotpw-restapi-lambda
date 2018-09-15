@@ -11,6 +11,7 @@ const validStoreEventData = require('../events/ValidStoreGatewayRequest.json')
 const invalidStoreEventData = require('../events/InvalidStoreGatewayRequest.json')
 const validRetrieveEventData = require('../events/ValidRetrieveGatewayRequest.json')
 const invalidRetrieveEventData = require('../events/InvalidRetrieveGatewayRequest.json')
+const validSendCodeEventData = require('../events/ValidSendCodeGatewayRequest.json')
 
 describe('fpw-restapi', () => {
   before((done) => {
@@ -45,6 +46,12 @@ describe('fpw-restapi', () => {
   it('/v1/secrets POST (retrieve) returns 400 for invalid requests', () => {
     return wrapped.run(invalidRetrieveEventData).then((response) => {
       expect(response.statusCode).to.equal(400);
+    });
+  });
+
+  it('/v1/codes POST (send) returns 200 for valid requests', () => {
+    return wrapped.run(validSendCodeEventData).then((response) => {
+      expect(response.statusCode).to.equal(200);
     });
   });
 

@@ -64,6 +64,12 @@ curl -X POST \
     --header "Content-Type: application/json" \
     -d '{"application": "myapp", "phone": "609-555-1212"}' \
     https://api-dev.forgotpw.com/v1/secrets
+
+# request a confirmation code
+curl -X POST \
+    --header "Content-Type: application/json" \
+    -d '{"application": "myapp", "phone": "609-555-1212"}' \
+    https://api-dev.forgotpw.com/v1/codes
 ```
 
 ## View Logs

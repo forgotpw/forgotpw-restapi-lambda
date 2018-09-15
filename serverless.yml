@@ -50,6 +50,7 @@ functions:
     environment:
       STORE_SNS_TOPIC_NAME: fpw-secret-store-request
       RETRIEVE_SNS_TOPIC_NAME: fpw-secret-retrieve-request
+      SENDCODE_SNS_TOPIC_NAME: fpw-code-send-request
       LOG_LEVEL: 'debug'
     events:
       - http:
@@ -70,3 +71,8 @@ resources:
       Properties: 
         DisplayName: fpw-secret-retrieve-request
         TopicName: fpw-secret-retrieve-request
+    SendCodeRequestSNSEvent:
+      Type: AWS::SNS::Topic
+      Properties: 
+        DisplayName: fpw-code-send-request
+        TopicName: fpw-code-send-request
