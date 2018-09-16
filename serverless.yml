@@ -42,6 +42,18 @@ provider:
             - Ref: 'AWS::Region'
             - Ref: 'AWS::AccountId'
             - 'fpw-code-send-request'
+    -
+      Effect: Allow
+      Action:
+        - dynamodb:GetItem
+      Resource: 
+        - 'Fn::Join':
+          - ':'
+          -
+            - 'arn:aws:dynamodb'
+            - Ref: 'AWS::Region'
+            - Ref: 'AWS::AccountId'
+            - 'table/fpw_confirmation_code'
 
 plugins:
   - serverless-mocha-plugin

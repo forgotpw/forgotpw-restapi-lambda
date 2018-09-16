@@ -53,23 +53,25 @@ sls invoke test
 ## Test Live Endpoints
 
 ```shell
+export PHONE="609-555-1212"
+
+# request a confirmation code
+curl -X POST \
+    --header "Content-Type: application/json" \
+    -d '{"application": "myapp", "phone": "'$PHONE'"}' \
+    https://api-dev.forgotpw.com/v1/codes
+
 # request storing a password
 curl -X PUT \
     --header "Content-Type: application/json" \
-    -d '{"hint": "my hint", "application": "myapp", "phone": "609-555-1212"}' \
+    -d '{"confirmationCode": "1234", "hint": "my hint", "application": "myapp", "phone": "'$PHONE'"}' \
     https://api-dev.forgotpw.com/v1/secrets
 
 # request retrieving a password
 curl -X POST \
     --header "Content-Type: application/json" \
-    -d '{"application": "myapp", "phone": "609-555-1212"}' \
+    -d '{"application": "myapp", "phone": "'$PHONE'"}' \
     https://api-dev.forgotpw.com/v1/secrets
-
-# request a confirmation code
-curl -X POST \
-    --header "Content-Type: application/json" \
-    -d '{"application": "myapp", "phone": "609-555-1212"}' \
-    https://api-dev.forgotpw.com/v1/codes
 ```
 
 ## View Logs

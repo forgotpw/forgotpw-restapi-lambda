@@ -17,7 +17,7 @@ async function handler(event, context, done) {
   }
   catch (err) {
     const msg = 'Error parsing path: ' + err
-    return done(null, errorResponse(err))
+    return done(null, buildGatewayResponseFromError(err))
   }
 
   logger.trace(`event.httpMethod: ${event.httpMethod}, event.body: ${event.body}`)
@@ -37,7 +37,7 @@ async function handler(event, context, done) {
     done(null, response)
   }
   catch (err) {
-    done(null, errorResponse(err))
+    done(null, buildGatewayResponseFromError(err))
   }
 }
 
@@ -47,36 +47,27 @@ async function secretsController(event) {
   const body = JSON.parse(event.body)
   switch (event.httpMethod) {
     case 'PUT':
+      const confirmationCodesService = new ConfirmationCodesService()
+      let valid = await confirmationCodesService.validateCode(
+        body.confirmationCode,
+        body.phone)
+      if (!valid) {
+        let msg = 'Confirmation code presented is not valid or is expired'
+        logger.warn(msg)
+        return gatewayResponse(401, msg)
+      }
       await secretsApiService.publishStoreEvent(
         body.hint,
         body.application,
-        body.phone
+        body.phone,
       )
-      return {
-        statusCode: 200,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Credentials': true,
-        },
-        body: JSON.stringify({
-          message: `Successfully posted event`
-        })
-      }
+      return gatewayResponse(200, 'Successfully posted event')
     case 'POST':
       await secretsApiService.publishRetrieveEvent(
         body.application,
         body.phone
       )
-      return {
-        statusCode: 200,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Credentials': true,
-        },
-        body: JSON.stringify({
-          message: `Successfully posted event`
-        })
-      }
+      return gatewayResponse(200, 'Successfully posted event')
     default:
       throw new Error(`Unhandled method requested: ${event.method}`)
   }
@@ -92,22 +83,26 @@ async function codesController(event) {
         body.application,
         body.phone
       )
-      return {
-        statusCode: 200,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Credentials': true,
-        },
-        body: JSON.stringify({
-          message: `Successfully posted event`
-        })
-      }
+      return gatewayResponse(200, 'Successfully posted event')
     default:
       throw new Error(`Unhandled method requested: ${event.method}`)
   }
 }
 
-function errorResponse(err) {
+function gatewayResponse(statusCode, message) {
+  return {
+    statusCode: statusCode,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': true,
+    },
+    body: JSON.stringify({
+      message: message
+    })
+  }  
+}
+
+function buildGatewayResponseFromError(err) {
   const errMappings = [
     { httpStatus: 400, errStartsWith: 'Error validating message' },
     { httpStatus: 405, errStartsWith: 'Unhandled path requested' },

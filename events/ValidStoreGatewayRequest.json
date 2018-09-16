@@ -52,6 +52,6 @@
       },
       "apiId": "aykeino5k6"
   },
-  "body": "{\"hint\": \"my hint\", \"application\": \"myapp\", \"phone\": \"609-555-1212\"}",
+  "body": "{\"confirmationCode\": 1234, \"hint\": \"my hint\", \"application\": \"myapp\", \"phone\": \"609-555-1313\"}",
   "isBase64Encoded": false
 }

@@ -1,3 +1,4 @@
+const AWS = require("aws-sdk")
 const config = require('../config')
 const logger = require('../logger')
 const Joi = require('joi');
@@ -34,6 +35,44 @@ class ConfirmationCodesService {
     }
   
     return response
+  }
+
+  async validateCode(code, phone) {
+    const normalizedPhone = helpers.normalizePhone(phone)
+    const docClient = new AWS.DynamoDB.DocumentClient()
+    const params = {
+      TableName : 'fpw_confirmation_code',
+      Key: {
+        NormalizedPhone: normalizedPhone
+      }
+    };
+    logger.debug(`Trying to retrieve confirmation code ${code} from Dynamodb for ${normalizedPhone}...`)
+    let dynamoResponse = null
+    try {
+      dynamoResponse = await docClient.get(params).promise()
+    }
+    catch (err) {
+      // logger.error("Unable to read confirmation code from Dynamodb: ", JSON.stringify(err, null, 2))
+      // throw err
+      logger.warn(`No code found in database for ${normalizedPhone}, err: `, err)
+      return false
+    }
+
+    // ensure the code presented matches the code in the database
+    if (dynamoResponse.Item.Code != code) {
+      logger.warn(`Presented code ${code} does not match code in database ${dynamoResponse.Item.Code}`)
+      return false
+    }
+    
+    // ensure the code is not expired
+    const currentEpochTime = Math.round((new Date).getTime() / 1000)
+    if (currentEpochTime > dynamoResponse.Item.ExpireTime) {
+      logger.warn(`Presented code exists in database but is expired (db epoch ${dynamoResponse.Item.ExpireTime} vs current epoch ${currentEpochTime})`)
+      return false
+    }
+
+    logger.debug(`Confirmation code ${code} is valid for ${normalizedPhone}`)
+    return true
   }
 
 }
