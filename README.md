@@ -53,6 +53,7 @@ sls invoke test
 ## Test Live Endpoints
 
 ```shell
+# set this to whatever cell phone is used for testing
 export PHONE="609-555-1212"
 
 # request a confirmation code
@@ -72,6 +73,12 @@ curl -X POST \
     --header "Content-Type: application/json" \
     -d '{"application": "myapp", "phone": "'$PHONE'"}' \
     https://api-dev.forgotpw.com/v1/secrets
+
+# request retrieving a password
+curl -X POST \
+    --header "Content-Type: application/json" \
+    -d '{"confirmationCode": "1234", "phone": "'$PHONE'"}' \
+    https://api-dev.forgotpw.com/v1/nuke
 ```
 
 ## View Logs

@@ -14,6 +14,7 @@ const invalidStoreEventData = require('../events/InvalidStoreGatewayRequest.json
 const validRetrieveEventData = require('../events/ValidRetrieveGatewayRequest.json')
 const invalidRetrieveEventData = require('../events/InvalidRetrieveGatewayRequest.json')
 const validSendCodeEventData = require('../events/ValidSendCodeGatewayRequest.json')
+const validNukeAccountEventData = require('../events/ValidNukeAccountGatewayRequest.json')
 
 describe('fpw-restapi', () => {
   before((done) => {
@@ -73,6 +74,20 @@ describe('fpw-restapi', () => {
     });
   });
 
+  it('/v1/nuke POST (send) returns 200 for valid requests', async () => {
+    await writeCodeToDynamo(1234, '6095551414', false)
+    return wrapped.run(validNukeAccountEventData).then((response) => {
+      expect(response.statusCode).to.equal(200);
+    });
+  });
+
+  it('/v1/nuke POST (send) returns 401 for valid requests with invalid confirmation code', async () => {
+    await writeCodeToDynamo(1234, '6095551414', true)
+    return wrapped.run(validNukeAccountEventData).then((response) => {
+      expect(response.statusCode).to.equal(401);
+    });
+  });
+
 });
 
 async function writeCodeToDynamo(confirmationCode, normalizedPhone, isExpired) {
@@ -82,7 +97,7 @@ async function writeCodeToDynamo(confirmationCode, normalizedPhone, isExpired) {
   let expireEpoch = null
   if (isExpired) {
     // make it already expired
-    expireEpoch = (new Date).getTime() - (1000 * 60 * 15)
+    expireEpoch = (new Date).getTime() - 1000
   } else {
     expireEpoch = (new Date).getTime() + (1000 * 60 * 15)
   }
@@ -97,7 +112,7 @@ async function writeCodeToDynamo(confirmationCode, normalizedPhone, isExpired) {
       }
   };
 
-  console.debug(`Storing confirmation code ${confirmationCode} to Dynamodb for ${normalizedPhone}...`)
+  console.log(`Storing confirmation code ${confirmationCode} to Dynamodb for ${normalizedPhone}...`)
   try {
     await docClient.put(params).promise()
   }

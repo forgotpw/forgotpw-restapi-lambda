@@ -2,6 +2,7 @@
 
 const SecretsApiService = require('./secretsApiService/secretsApiService')
 const ConfirmationCodesService = require('./confirmationCodesService/confirmationCodesService')
+const NukeService = require('./nukeService/nukeService')
 const logger = require('./logger')
 
 async function handler(event, context, done) {
@@ -30,6 +31,9 @@ async function handler(event, context, done) {
         break
       case '/v1/codes':
         response = await codesController(event, done)
+        break
+      case '/v1/nuke':
+        response = await nukeController(event, done)
         break
       default:
         throw new Error(`Unhandled path requested: ${path}`)
@@ -81,6 +85,30 @@ async function codesController(event) {
     case 'POST':
       await confirmationCodesService.publishSendCodeEvent(
         body.application,
+        body.phone
+      )
+      return gatewayResponse(200, 'Successfully posted event')
+    default:
+      throw new Error(`Unhandled method requested: ${event.method}`)
+  }
+}
+
+async function nukeController(event) {
+  const nukeService = new NukeService()
+
+  const body = JSON.parse(event.body)
+  switch (event.httpMethod) {
+    case 'POST':
+      const confirmationCodesService = new ConfirmationCodesService()
+      let valid = await confirmationCodesService.validateCode(
+        body.confirmationCode,
+        body.phone)
+      if (!valid) {
+        let msg = 'Confirmation code presented is not valid or is expired'
+        logger.warn(msg)
+        return gatewayResponse(401, msg)
+      }
+      await nukeService.publishNukeAccountEvent(
         body.phone
       )
       return gatewayResponse(200, 'Successfully posted event')
