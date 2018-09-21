@@ -50,17 +50,30 @@ class ConfirmationCodesService {
     let dynamoResponse = null
     try {
       dynamoResponse = await docClient.get(params).promise()
+      logger.debug('dynamoResponse: ', dynamoResponse)
     }
     catch (err) {
-      // logger.error("Unable to read confirmation code from Dynamodb: ", JSON.stringify(err, null, 2))
-      // throw err
-      logger.warn(`No code found in database for ${normalizedPhone}, err: `, err)
+      logger.warn(`Unable to read confirmation code from Dynamodb for ${normalizedPhone}, err: `, err)
+      await incrementInvalidRequestCounter(normalizedPhone)
+      return false
+    }
+
+    if (Object.keys(dynamoResponse).length === 0) {
+      logger.warn(`No code found in database for ${normalizedPhone}`)
+      await incrementInvalidRequestCounter(normalizedPhone)
+      return false
+    }
+
+    // ensure the invalid count is not beyond the max allowed
+    if (dynamoResponse.Item.InvalidCount > config.CODE_INVALIDCOUNT_MAX) {
+      logger.warn(`Max invalid count exceeded for ${normalizedPhone}`)
       return false
     }
 
     // ensure the code presented matches the code in the database
     if (dynamoResponse.Item.Code != code) {
       logger.warn(`Presented code ${code} does not match code in database ${dynamoResponse.Item.Code}`)
+      await incrementInvalidRequestCounter(normalizedPhone)
       return false
     }
     
@@ -75,6 +88,32 @@ class ConfirmationCodesService {
     return true
   }
 
+}
+
+async function incrementInvalidRequestCounter(normalizedPhone) {
+  const docClient = new AWS.DynamoDB.DocumentClient()
+
+  const params = {
+      TableName:'fpw_confirmation_code',
+      Key: { 'NormalizedPhone': normalizedPhone },
+      UpdateExpression: 'ADD #invalidcount :incr',
+      ExpressionAttributeNames: {'#invalidcount' : 'InvalidCount'},
+      ExpressionAttributeValues: {
+        ':incr' : 1,
+      },
+      ReturnValues: 'UPDATED_NEW'
+  };
+
+  logger.debug(`Incrementing invalid count for ${normalizedPhone}...`)
+  let data = null
+  try {
+    data = await docClient.update(params).promise()
+  }
+  catch (err) {
+    logger.error("Unable to update InvalidCount in Dynamodb: ", JSON.stringify(err, null, 2))
+    throw err
+  }
+  logger.info(`Updated InvalidCount to ${data.Attributes.InvalidCount} for ${normalizedPhone}`)
 }
 
 function validateSendCodeMessage(message) {
