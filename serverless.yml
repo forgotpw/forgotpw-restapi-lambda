@@ -11,6 +11,7 @@ provider:
   stage: live
   logRetentionInDays: 14 # cloudwatch logs
   timeout: 10 # seconds
+  versionFunctions: true
   apiGateway:
     restApiId: ${env:REST_API_ID}
     restApiRootResourceId: ${env:ROOT_RESOURCE_ID}
@@ -65,6 +66,13 @@ provider:
 
 plugins:
   - serverless-mocha-plugin
+  - serverless-prune-plugin
+
+custom:
+  # serverless-prune-plugin
+  prune:
+    automatic: true
+    number: 5
 
 package:
   exclude:
