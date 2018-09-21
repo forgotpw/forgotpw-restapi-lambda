@@ -74,7 +74,7 @@ curl -X POST \
     -d '{"application": "myapp", "phone": "'$PHONE'"}' \
     https://api-dev.forgotpw.com/v1/secrets
 
-# request retrieving a password
+# request to nuke an account
 curl -X POST \
     --header "Content-Type: application/json" \
     -d '{"confirmationCode": "1234", "phone": "'$PHONE'"}' \

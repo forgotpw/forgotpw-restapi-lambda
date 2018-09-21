@@ -10,6 +10,7 @@ provider:
   deploymentBucket: forgotpw-deploy-${opt:awsEnv, 'dev'}
   stage: live
   logRetentionInDays: 14 # cloudwatch logs
+  timeout: 10 # seconds
   apiGateway:
     restApiId: ${env:REST_API_ID}
     restApiRootResourceId: ${env:ROOT_RESOURCE_ID}
