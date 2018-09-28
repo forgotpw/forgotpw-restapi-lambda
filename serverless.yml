@@ -55,6 +55,7 @@ provider:
       Effect: Allow
       Action:
         - dynamodb:GetItem
+        - dynamodb:UpdateItem
       Resource: 
         - 'Fn::Join':
           - ':'
