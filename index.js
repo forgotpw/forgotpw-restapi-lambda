@@ -4,6 +4,7 @@ const SecretsApiService = require('./secretsApiService/secretsApiService')
 const ConfirmationCodesService = require('./confirmationCodesService/confirmationCodesService')
 const NukeService = require('./nukeService/nukeService')
 const logger = require('./logger')
+const Joi = require('joi');
 
 async function handler(event, context, done) {
 
@@ -51,6 +52,20 @@ async function secretsController(event) {
   const body = JSON.parse(event.body)
   switch (event.httpMethod) {
     case 'PUT':
+      // validate payload
+      const storeSchema = Joi.object().keys({
+        application: Joi.string().min(2).max(256).required(),
+        hint: Joi.string().min(3).max(256).required(),
+        phone: Joi.string().min(10).max(32).required(),
+        confirmationCode: Joi.string().min(4).max(4).required()
+      })
+      const storeResult = Joi.validate(body, storeSchema)
+      if (storeResult.error !== null) {
+        const msg = "Store secret payload invalid: " + JSON.stringify(storeResult)
+        logger.error(msg)
+        return gatewayResponse(400, msg)
+      }
+  
       const confirmationCodesService = new ConfirmationCodesService()
       let valid = await confirmationCodesService.validateCode(
         body.confirmationCode,
@@ -67,6 +82,18 @@ async function secretsController(event) {
       )
       return gatewayResponse(200, 'Successfully posted event')
     case 'POST':
+      // validate payload
+      const retrieveSchema = Joi.object().keys({
+        application: Joi.string().min(2).max(256).required(),
+        phone: Joi.string().min(10).max(32).required()
+      })
+      const retrieveResult = Joi.validate(body, retrieveSchema)
+      if (retrieveResult.error !== null) {
+        const msg = "Retrieve secret payload invalid: " + JSON.stringify(retrieveResult)
+        logger.error(msg)
+        return gatewayResponse(400, msg)
+      }
+
       await secretsApiService.publishRetrieveEvent(
         body.application,
         body.phone
