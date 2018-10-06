@@ -14,13 +14,13 @@ npm install serverless -g
 ## Deploy
 
 ```shell
+export AWS_ENV="dev" && export PROFILE="fpw$AWS_ENV"
 # will export environment variables needed for serverless.yml
-source ./exports.sh api-dev fpwdev
+source ./exports.sh
 
 sls \
     deploy \
-    --aws-profile fpwdev \
-    --awsEnv dev \
+    --aws-profile $PROFILE \
     --verbose
 ```
 
@@ -32,8 +32,9 @@ Initial setup:
 # ensure we are matching the version of node used by lambda
 nvm use 8.10.0
 
+export AWS_ENV="dev" && export PROFILE="fpw$AWS_ENV"
 # will export environment variables needed for serverless.yml
-source ./exports.sh api-dev fpwdev
+source ./exports.sh
 
 sls invoke local \
     -f fpw-restapi \
@@ -44,8 +45,9 @@ sls invoke local \
 ## Invoke Integration Tests
 
 ```shell
+export AWS_ENV="dev" && export PROFILE="fpw$AWS_ENV"
 # will export environment variables needed for serverless.yml
-source ./exports.sh api-dev fpwdev
+source ./exports.sh
 
 sls invoke test
 ```
@@ -55,30 +57,31 @@ sls invoke test
 ```shell
 # set this to whatever cell phone is used for testing
 export PHONE="609-555-1212"
+export SUBDOMAIN="api-dev"
 
 # request a confirmation code
 curl -X POST \
     --header "Content-Type: application/json" \
     -d '{"application": "myapp", "phone": "'$PHONE'"}' \
-    https://api-dev.forgotpw.com/v1/codes
+    https://$SUBDOMAIN.forgotpw.com/v1/codes
 
 # request storing a password
 curl -X PUT \
     --header "Content-Type: application/json" \
     -d '{"confirmationCode": "1234", "hint": "my hint", "application": "myapp", "phone": "'$PHONE'"}' \
-    https://api-dev.forgotpw.com/v1/secrets
+    https://$SUBDOMAIN.forgotpw.com/v1/secrets
 
 # request retrieving a password
 curl -X POST \
     --header "Content-Type: application/json" \
     -d '{"application": "myapp", "phone": "'$PHONE'"}' \
-    https://api-dev.forgotpw.com/v1/secrets
+    https://$SUBDOMAIN.forgotpw.com/v1/secrets
 
 # request to nuke an account
 curl -X POST \
     --header "Content-Type: application/json" \
     -d '{"confirmationCode": "1234", "phone": "'$PHONE'"}' \
-    https://api-dev.forgotpw.com/v1/nuke
+    https://$SUBDOMAIN.forgotpw.com/v1/nuke
 ```
 
 ## View Logs
@@ -86,9 +89,10 @@ curl -X POST \
 Tail log output from Lambda running in AWS:
 
 ```shell
+export AWS_ENV="dev" && export PROFILE="fpw$AWS_ENV"
+
 sls logs -f fpw-restapi -l \
-    --awsEnv dev \
-    --aws-profile fpwdev \
+    --aws-profile $PROFILE \
     -t
 ```
 
