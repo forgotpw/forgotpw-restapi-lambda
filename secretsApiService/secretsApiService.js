@@ -18,7 +18,8 @@ class SecretsApiService {
       message = {
         action: 'store',
         hint: helpers.safeTrim(hint),
-        application: helpers.safeTrim(application),
+        rawApplication: helpers.safeTrim(application),
+        normalizedApplication: helpers.normalizeApplication(application),
         rawPhone: helpers.safeTrim(phone),
         normalizedPhone: helpers.normalizePhone(phone)
       }
@@ -58,7 +59,8 @@ class SecretsApiService {
   
       message = {
         action: 'retrieve',
-        application: helpers.safeTrim(application),
+        rawApplication: helpers.safeTrim(application),
+        normalizedApplication: helpers.normalizeApplication(application),
         rawPhone: helpers.safeTrim(phone),
         normalizedPhone: helpers.normalizePhone(phone)
       }
@@ -92,7 +94,8 @@ function validateStoreMessage(message) {
   const schema = Joi.object().keys({
     action: Joi.string().valid('store').required(),
     hint: Joi.string().min(3).max(256).required(),
-    application: Joi.string().min(2).max(256).required(),
+    rawApplication: Joi.string().min(2).max(256).required(),
+    normalizedApplication: Joi.string().min(2).max(256).required(),
     rawPhone: Joi.string().min(10).max(32).required(),
     normalizedPhone: Joi.string().min(10).max(32).required()
   })
@@ -111,7 +114,8 @@ function validateRetrieveMessage(message) {
 
   const schema = Joi.object().keys({
     action: Joi.string().valid('retrieve').required(),
-    application: Joi.string().min(2).max(256).required(),
+    rawApplication: Joi.string().min(2).max(256).required(),
+    normalizedApplication: Joi.string().min(2).max(256).required(),
     rawPhone: Joi.string().min(10).max(32).required(),
     normalizedPhone: Joi.string().min(10).max(32).required()
   })

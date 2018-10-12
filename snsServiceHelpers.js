@@ -44,6 +44,23 @@ module.exports.normalizePhone = function(rawPhone) {
   }
 }
 
+module.exports.normalizeApplication = function(application) {
+  try {
+    application = application.trim()
+    application = application.toLowerCase()
+    // replace spaces with dashes
+    application = application.replace(/\s+/g, '-')
+    // remove non alphanumeric characters
+    application = application.replace(/\W/g, '')
+    // make sure there are no double dashes
+    application = application.replace(/--/g, "-")
+  }
+  catch (err) {
+    logger.error(`Error normalizing application string ${application}:`, err)
+  }
+  return application
+}
+
 module.exports.safeTrim = function (s) {
   try {
     return s.trim()
