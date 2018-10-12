@@ -16,7 +16,7 @@ class ConfirmationCodesService {
   
       message = {
         action: 'send',
-        rawAplication: helpers.safeTrim(application),
+        rawApplication: helpers.safeTrim(application),
         normalizedApplication: helpers.normalizeApplication(application),
         rawPhone: helpers.safeTrim(phone),
         normalizedPhone: helpers.normalizePhone(phone)

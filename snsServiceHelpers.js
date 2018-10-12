@@ -48,10 +48,10 @@ module.exports.normalizeApplication = function(application) {
   try {
     application = application.trim()
     application = application.toLowerCase()
+    // remove non alphanumeric characters except spaces
+    application = application.replace(/[^a-zA-Z\d\s:]/g, '')
     // replace spaces with dashes
     application = application.replace(/\s+/g, '-')
-    // remove non alphanumeric characters
-    application = application.replace(/\W/g, '')
     // make sure there are no double dashes
     application = application.replace(/--/g, "-")
   }
