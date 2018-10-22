@@ -36,7 +36,11 @@ export AWS_ENV="dev" && export PROFILE="fpw$AWS_ENV"
 # will export environment variables needed for serverless.yml
 source ./exports.sh
 
-sls invoke local \
+# pip install iam-starter
+iam-starter \
+    --role role-ops-devops \
+    --profile $PROFILE \
+    --command sls invoke local \
     -f fpw-restapi \
     -p ./events/ValidStoreGatewayRequest.json \
     -l
@@ -49,7 +53,8 @@ export AWS_ENV="dev" && export PROFILE="fpw$AWS_ENV"
 # will export environment variables needed for serverless.yml
 source ./exports.sh
 
-sls invoke test
+# pip install iam-starter
+iam-starter --role role-ops-devops --profile $PROFILE --command sls invoke test
 ```
 
 ## Test Live Endpoints

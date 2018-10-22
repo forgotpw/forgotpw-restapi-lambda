@@ -15,6 +15,7 @@ const validRetrieveEventData = require('../events/ValidRetrieveGatewayRequest.js
 const invalidRetrieveEventData = require('../events/InvalidRetrieveGatewayRequest.json')
 const validSendCodeEventData = require('../events/ValidSendCodeGatewayRequest.json')
 const validNukeAccountEventData = require('../events/ValidNukeAccountGatewayRequest.json')
+const PhoneTokenService = require('phone-token-service')
 
 describe('fpw-restapi', () => {
   before((done) => {
@@ -90,7 +91,14 @@ describe('fpw-restapi', () => {
 
 });
 
-async function writeCodeToDynamo(confirmationCode, normalizedPhone, isExpired) {
+async function writeCodeToDynamo(confirmationCode, phone, isExpired) {
+  const phoneTokenService = new PhoneTokenService({
+    tokenHashHmac: process.env.USERTOKEN_HASH_HMAC,
+    s3bucket: process.env.USERTOKENS_S3_BUCKET,
+    defaultCountryCode: 'US'
+  })
+  let userToken = await phoneTokenService.getTokenFromPhone(phone)
+
   const docClient = new AWS.DynamoDB.DocumentClient()
 
   // make sure it's a valid, not expired code
@@ -106,13 +114,13 @@ async function writeCodeToDynamo(confirmationCode, normalizedPhone, isExpired) {
   const params = {
       TableName:'fpw_confirmation_code',
       Item:{
-          "NormalizedPhone": normalizedPhone,
+          "UserToken": userToken,
           "Code": confirmationCode,
           "ExpireTime": expireEpoch
       }
   };
 
-  console.log(`Storing confirmation code ${confirmationCode} to Dynamodb for ${normalizedPhone}...`)
+  console.log(`Storing confirmation code ${confirmationCode} to Dynamodb for ${userToken}...`)
   try {
     await docClient.put(params).promise()
   }
