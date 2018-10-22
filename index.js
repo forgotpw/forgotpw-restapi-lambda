@@ -1,8 +1,8 @@
 'use strict';
 
-const SecretsApiService = require('./secretsApiService/secretsApiService')
-const ConfirmationCodesService = require('./confirmationCodesService/confirmationCodesService')
-const NukeService = require('./nukeService/nukeService')
+const SecretsApiService = require('./lib/secretsApiService')
+const ConfirmationCodesService = require('./lib/confirmationCodesService')
+const NukeService = require('./lib/nukeService')
 const logger = require('./logger')
 const Joi = require('joi');
 
@@ -79,6 +79,7 @@ async function secretsController(event) {
         body.hint,
         body.application,
         body.phone,
+        'US' // TODO replace with frontend result of https://ipapi.co/country/
       )
       return gatewayResponse(200, 'Successfully posted event')
     case 'POST':
@@ -96,7 +97,8 @@ async function secretsController(event) {
 
       await secretsApiService.publishRetrieveEvent(
         body.application,
-        body.phone
+        body.phone,
+        'US' // TODO replace with frontend result of https://ipapi.co/country/
       )
       return gatewayResponse(200, 'Successfully posted event')
     default:
@@ -111,8 +113,8 @@ async function codesController(event) {
   switch (event.httpMethod) {
     case 'POST':
       await confirmationCodesService.publishSendCodeEvent(
-        body.application,
-        body.phone
+        body.phone,
+        'US' // TODO replace with frontend result of https://ipapi.co/country/
       )
       return gatewayResponse(200, 'Successfully posted event')
     default:
@@ -129,14 +131,17 @@ async function nukeController(event) {
       const confirmationCodesService = new ConfirmationCodesService()
       let valid = await confirmationCodesService.validateCode(
         body.confirmationCode,
-        body.phone)
+        body.phone,
+        'US' // TODO replace with frontend result of https://ipapi.co/country/
+      )
       if (!valid) {
         let msg = 'Confirmation code presented is not valid or is expired'
         logger.warn(msg)
         return gatewayResponse(401, msg)
       }
       await nukeService.publishNukeAccountEvent(
-        body.phone
+        body.phone,
+        'US' // TODO replace with frontend result of https://ipapi.co/country/
       )
       return gatewayResponse(200, 'Successfully posted event')
     default:

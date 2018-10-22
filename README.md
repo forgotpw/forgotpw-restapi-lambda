@@ -42,7 +42,7 @@ sls invoke local \
     -l
 ```
 
-## Invoke Integration Tests
+## Invoke Tests
 
 ```shell
 export AWS_ENV="dev" && export PROFILE="fpw$AWS_ENV"
@@ -68,7 +68,7 @@ curl -X POST \
 # request storing a password
 curl -X PUT \
     --header "Content-Type: application/json" \
-    -d '{"confirmationCode": "1234", "hint": "my hint", "application": "myapp", "phone": "'$PHONE'"}' \
+    -d '{"confirmationCode": "1234", "secret": "my secret", "application": "myapp", "phone": "'$PHONE'"}' \
     https://$SUBDOMAIN.forgotpw.com/v1/secrets
 
 # request retrieving a password
