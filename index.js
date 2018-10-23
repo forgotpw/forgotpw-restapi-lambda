@@ -1,10 +1,18 @@
 'use strict';
 
+const PhoneTokenService = require('phone-token-service')
 const SecretsApiService = require('./lib/secretsApiService')
 const ConfirmationCodesService = require('./lib/confirmationCodesService')
 const NukeService = require('./lib/nukeService')
 const logger = require('./logger')
 const Joi = require('joi');
+const config = require('./config')
+
+const phoneTokenConfig = {
+  tokenHashHmac: config.USERTOKEN_HASH_HMAC,
+  s3bucket: config.USERTOKENS_S3_BUCKET,
+  defaultCountryCode: 'US'
+}
 
 async function handler(event, context, done) {
 
@@ -47,15 +55,18 @@ async function handler(event, context, done) {
 }
 
 async function secretsController(event) {
+  const phoneTokenService = new PhoneTokenService(phoneTokenConfig)
   const secretsApiService = new SecretsApiService()
 
   const body = JSON.parse(event.body)
+  const userToken = await phoneTokenService.getTokenFromPhone(body.phone)
+
   switch (event.httpMethod) {
     case 'PUT':
       // validate payload
       const storeSchema = Joi.object().keys({
         application: Joi.string().min(2).max(256).required(),
-        hint: Joi.string().min(3).max(256).required(),
+        secret: Joi.string().min(3).max(256).required(),
         phone: Joi.string().min(10).max(32).required(),
         confirmationCode: Joi.string().min(4).max(4).required()
       })
@@ -65,22 +76,19 @@ async function secretsController(event) {
         logger.error(msg)
         return gatewayResponse(400, msg)
       }
-  
       const confirmationCodesService = new ConfirmationCodesService()
       let valid = await confirmationCodesService.validateCode(
         body.confirmationCode,
-        body.phone)
+        userToken)
       if (!valid) {
         let msg = 'Confirmation code presented is not valid or is expired'
         logger.warn(msg)
         return gatewayResponse(401, msg)
       }
       await secretsApiService.publishStoreEvent(
-        body.hint,
+        body.secret,
         body.application,
-        body.phone,
-        'US' // TODO replace with frontend result of https://ipapi.co/country/
-      )
+        userToken)
       return gatewayResponse(200, 'Successfully posted event')
     case 'POST':
       // validate payload
@@ -97,9 +105,7 @@ async function secretsController(event) {
 
       await secretsApiService.publishRetrieveEvent(
         body.application,
-        body.phone,
-        'US' // TODO replace with frontend result of https://ipapi.co/country/
-      )
+        userToken)
       return gatewayResponse(200, 'Successfully posted event')
     default:
       throw new Error(`Unhandled method requested: ${event.method}`)
@@ -107,15 +113,15 @@ async function secretsController(event) {
 }
 
 async function codesController(event) {
+  const phoneTokenService = new PhoneTokenService(phoneTokenConfig)
   const confirmationCodesService = new ConfirmationCodesService()
 
   const body = JSON.parse(event.body)
+  const userToken = await phoneTokenService.getTokenFromPhone(body.phone)
+
   switch (event.httpMethod) {
     case 'POST':
-      await confirmationCodesService.publishSendCodeEvent(
-        body.phone,
-        'US' // TODO replace with frontend result of https://ipapi.co/country/
-      )
+      await confirmationCodesService.publishSendCodeEvent(userToken)
       return gatewayResponse(200, 'Successfully posted event')
     default:
       throw new Error(`Unhandled method requested: ${event.method}`)
@@ -123,26 +129,24 @@ async function codesController(event) {
 }
 
 async function nukeController(event) {
+  const phoneTokenService = new PhoneTokenService(phoneTokenConfig)
   const nukeService = new NukeService()
 
   const body = JSON.parse(event.body)
+  const userToken = await phoneTokenService.getTokenFromPhone(body.phone)
+
   switch (event.httpMethod) {
     case 'POST':
       const confirmationCodesService = new ConfirmationCodesService()
       let valid = await confirmationCodesService.validateCode(
         body.confirmationCode,
-        body.phone,
-        'US' // TODO replace with frontend result of https://ipapi.co/country/
-      )
+        userToken)
       if (!valid) {
         let msg = 'Confirmation code presented is not valid or is expired'
         logger.warn(msg)
         return gatewayResponse(401, msg)
       }
-      await nukeService.publishNukeAccountEvent(
-        body.phone,
-        'US' // TODO replace with frontend result of https://ipapi.co/country/
-      )
+      await nukeService.publishNukeAccountEvent(userToken)
       return gatewayResponse(200, 'Successfully posted event')
     default:
       throw new Error(`Unhandled method requested: ${event.method}`)

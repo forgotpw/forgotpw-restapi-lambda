@@ -29,16 +29,24 @@ sls \
 Initial setup:
 
 ```shell
-# ensure we are matching the version of node used by lambda
 nvm use 8.10.0
+pip install iam-starter
 
 export AWS_ENV="dev" && export PROFILE="fpw$AWS_ENV"
-# will export environment variables needed for serverless.yml
 source ./exports.sh
+export USERTOKENS_S3_BUCKET="forgotpw-usertokens-$AWS_ENV"
+export AWS_REGION=us-east-1
 
-# pip install iam-starter
+# validate the 1234 confirmation code used in the sample event
+AWS_ENV= iam-starter \
+    --role dev \
+    --profile $PROFILE \
+    --command ssm-starter \
+    --ssm-name /fpw/ \
+    --command node mockConfirmationCode.js '1234' '609-555-1313' 0
+
 iam-starter \
-    --role role-ops-devops \
+    --role dev \
     --profile $PROFILE \
     --command sls invoke local \
     -f fpw-restapi \
@@ -49,12 +57,15 @@ iam-starter \
 ## Invoke Tests
 
 ```shell
+pip install iam-starter
+
 export AWS_ENV="dev" && export PROFILE="fpw$AWS_ENV"
-# will export environment variables needed for serverless.yml
 source ./exports.sh
 
-# pip install iam-starter
-iam-starter --role role-ops-devops --profile $PROFILE --command sls invoke test
+iam-starter \
+    --role dev \
+    --profile $PROFILE \
+    --command sls invoke test
 ```
 
 ## Test Live Endpoints

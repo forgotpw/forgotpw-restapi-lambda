@@ -1,4 +1,7 @@
 #!/bin/bash
+
+# will export environment variables needed for serverless.yml
+
 if [ -z "$AWS_ENV" ]; then
     echo "AWS_ENV environment variable not present"
     exit 1
