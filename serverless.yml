@@ -21,6 +21,11 @@ provider:
     -
       Effect: Allow
       Action:
+        - s3:GetObject
+      Resource: arn:aws:s3:::forgotpw-usertokens-${env:AWS_ENV, 'dev'}/*
+    -
+      Effect: Allow
+      Action:
         - sns:Publish
       Resource:
         - 'Fn::Join':

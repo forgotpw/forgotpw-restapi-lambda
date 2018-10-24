@@ -9,7 +9,7 @@
     "bunyan-prettystream": "^0.1.3",
     "joi": "^13.5.2",
     "libphonenumber-js": "^1.6.0",
-    "phone-token-service": "0.0.1"
+    "phone-token-service": "0.0.2"
   },
   "devDependencies": {
     "chai": "^4.2.0",
