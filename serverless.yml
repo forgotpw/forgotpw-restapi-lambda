@@ -22,7 +22,11 @@ provider:
       Effect: Allow
       Action:
         - s3:GetObject
-      Resource: arn:aws:s3:::forgotpw-usertokens-${env:AWS_ENV, 'dev'}/*
+        - s3:PutObject
+        - s3:ListBucket
+      Resource:
+        - arn:aws:s3:::forgotpw-usertokens-${env:AWS_ENV, 'dev'}/*
+        - arn:aws:s3:::forgotpw-usertokens-${env:AWS_ENV, 'dev'}
     -
       Effect: Allow
       Action:
