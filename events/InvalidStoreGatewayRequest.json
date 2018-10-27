@@ -18,7 +18,8 @@
       "X-Amzn-Trace-Id": "Root=1-5b65b8aa-4166eeccd4d7288c8e1e4c5a",
       "X-Forwarded-For": "69.248.82.211, 70.132.13.90",
       "X-Forwarded-Port": "443",
-      "X-Forwarded-Proto": "https"
+      "X-Forwarded-Proto": "https",
+      "X-VerificationCode": "1234"
   },
   "queryStringParameters": null,
   "pathParameters": {
@@ -52,6 +53,6 @@
       },
       "apiId": "aykeino5k6"
   },
-  "body": "{\"confirmationCode\": \"1234\", \"secret\": \"\", \"application\": \"myapp\", \"phone\": \"609-555-1212\"}",
+  "body": "{\"secret\": \"\", \"application\": \"myapp\", \"phone\": \"609-555-1212\"}",
   "isBase64Encoded": false
 }

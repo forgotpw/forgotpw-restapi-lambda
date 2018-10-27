@@ -2,9 +2,10 @@ const mochaPlugin = require('serverless-mocha-plugin');
 const expect = mochaPlugin.chai.expect;
 const wrapped = mochaPlugin.getWrapper('fpw-restapi', '/index.js', 'handler');
 const AWS = require('aws-sdk')
-const writeTestConfirmationCode = require('../mockConfirmationCode')
+const writeTestVerificationCode = require('../mockVerificationCode')
 
 const validStoreEventData = require('../events/ValidStoreGatewayRequest.json')
+const codeMissingStoreEventData = require('../events/CodeMissingStoreGatewayRequest.json')
 const invalidStoreEventData = require('../events/InvalidStoreGatewayRequest.json')
 const validRetrieveEventData = require('../events/ValidRetrieveGatewayRequest.json')
 const invalidRetrieveEventData = require('../events/InvalidRetrieveGatewayRequest.json')
@@ -16,22 +17,29 @@ describe('fpw-restapi', () => {
     done();
   });
 
-  it('/v1/secrets PUT (store) returns 200 for valid requests with valid confirmation code', async () => {
-    await writeTestConfirmationCode(1234, '6095551313', false)
+  it('/v1/secrets PUT (store) returns 200 for valid requests with valid verification code', async () => {
+    await writeTestVerificationCode(1234, '6095551313', false)
     return wrapped.run(validStoreEventData).then((response) => {
       expect(response.statusCode).to.equal(200);
     });
   });
 
-  it('/v1/secrets PUT (store) returns 401 for valid requests with invalid confirmation code', async () => {
-    await writeTestConfirmationCode(9999, '6095551313', false)
+  it('/v1/secrets PUT (store) returns 401 for valid requests with missing verification code', async () => {
+    await writeTestVerificationCode(1234, '6095551313', false)
+    return wrapped.run(codeMissingStoreEventData).then((response) => {
+      expect(response.statusCode).to.equal(401);
+    });
+  });
+
+  it('/v1/secrets PUT (store) returns 401 for valid requests with invalid verification code', async () => {
+    await writeTestVerificationCode(9999, '6095551313', false)
     return wrapped.run(validStoreEventData).then((response) => {
       expect(response.statusCode).to.equal(401);
     });
   });
 
-  it('/v1/secrets PUT (store) returns 401 for valid requests with expired confirmation code', async () => {
-    await writeTestConfirmationCode(1234, '6095551313', true)
+  it('/v1/secrets PUT (store) returns 401 for valid requests with expired verification code', async () => {
+    await writeTestVerificationCode(1234, '6095551313', true)
     return wrapped.run(validStoreEventData).then((response) => {
       expect(response.statusCode).to.equal(401);
     });
@@ -56,14 +64,14 @@ describe('fpw-restapi', () => {
   });
 
   it('/v1/nuke POST (send) returns 200 for valid requests', async () => {
-    await writeTestConfirmationCode(1234, '6095551414', false)
+    await writeTestVerificationCode(1234, '6095551414', false)
     return wrapped.run(validNukeAccountEventData).then((response) => {
       expect(response.statusCode).to.equal(200);
     });
   });
 
-  it('/v1/nuke POST (send) returns 401 for valid requests with invalid confirmation code', async () => {
-    await writeTestConfirmationCode(1234, '6095551414', true)
+  it('/v1/nuke POST (send) returns 401 for valid requests with invalid verification code', async () => {
+    await writeTestVerificationCode(1234, '6095551414', true)
     return wrapped.run(validNukeAccountEventData).then((response) => {
       expect(response.statusCode).to.equal(401);
     });

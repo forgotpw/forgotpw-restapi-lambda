@@ -2,7 +2,7 @@
 
 const PhoneTokenService = require('phone-token-service')
 const SecretsApiService = require('./lib/secretsApiService')
-const ConfirmationCodesService = require('./lib/confirmationCodesService')
+const VerificationCodesService = require('./lib/verificationCodesService')
 const NukeService = require('./lib/nukeService')
 const logger = require('./logger')
 const Joi = require('joi');
@@ -67,8 +67,7 @@ async function secretsController(event) {
       const storeSchema = Joi.object().keys({
         application: Joi.string().min(2).max(256).required(),
         secret: Joi.string().min(3).max(256).required(),
-        phone: Joi.string().min(10).max(32).required(),
-        confirmationCode: Joi.string().min(4).max(4).required()
+        phone: Joi.string().min(10).max(32).required()
       })
       const storeResult = Joi.validate(body, storeSchema)
       if (storeResult.error !== null) {
@@ -76,12 +75,19 @@ async function secretsController(event) {
         logger.error(msg)
         return gatewayResponse(400, msg)
       }
-      const confirmationCodesService = new ConfirmationCodesService()
-      let valid = await confirmationCodesService.validateCode(
-        body.confirmationCode,
+      const verificationCode = cleanHeaders(event.headers)['x-verificationcode']
+      if (!verificationCode) {
+        let msg = 'Verification code is not present'
+        logger.warn(msg)
+        logger.debug('HTTP Headers present: ' + JSON.stringify(event.headers))
+        return gatewayResponse(401, msg)        
+      }
+      const verificationCodesService = new VerificationCodesService()
+      let valid = await verificationCodesService.validateCode(
+        verificationCode,
         userToken)
       if (!valid) {
-        let msg = 'Confirmation code presented is not valid or is expired'
+        let msg = 'Verification code presented is not valid or is expired'
         logger.warn(msg)
         return gatewayResponse(401, msg)
       }
@@ -114,14 +120,14 @@ async function secretsController(event) {
 
 async function codesController(event) {
   const phoneTokenService = new PhoneTokenService(phoneTokenConfig)
-  const confirmationCodesService = new ConfirmationCodesService()
+  const verificationCodesService = new VerificationCodesService()
 
   const body = JSON.parse(event.body)
   const userToken = await phoneTokenService.getTokenFromPhone(body.phone)
 
   switch (event.httpMethod) {
     case 'POST':
-      await confirmationCodesService.publishSendCodeEvent(userToken)
+      await verificationCodesService.publishSendCodeEvent(userToken)
       return gatewayResponse(200, 'Successfully posted event')
     default:
       throw new Error(`Unhandled method requested: ${event.method}`)
@@ -137,12 +143,12 @@ async function nukeController(event) {
 
   switch (event.httpMethod) {
     case 'POST':
-      const confirmationCodesService = new ConfirmationCodesService()
-      let valid = await confirmationCodesService.validateCode(
-        body.confirmationCode,
+      const verificationCodesService = new VerificationCodesService()
+      let valid = await verificationCodesService.validateCode(
+        body.verificationCode,
         userToken)
       if (!valid) {
-        let msg = 'Confirmation code presented is not valid or is expired'
+        let msg = 'Verification code presented is not valid or is expired'
         logger.warn(msg)
         return gatewayResponse(401, msg)
       }
@@ -158,6 +164,7 @@ function gatewayResponse(statusCode, message) {
     statusCode: statusCode,
     headers: {
       'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': '*',
       'Access-Control-Allow-Credentials': true,
     },
     body: JSON.stringify({
@@ -184,6 +191,7 @@ function buildGatewayResponseFromError(err) {
     statusCode: statusCode,
     headers: {
       'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': '*',
       'Access-Control-Allow-Credentials': true,
     },
     body: JSON.stringify({
@@ -202,5 +210,17 @@ function parsePath(event) {
   }
   return path
 }
+
+// convert all http headers to lower case as X-VerificationCode
+// becomes x-verificationcode anyway, so as to avoid confusion,
+// lower case them all 
+function cleanHeaders(headers) {
+  const cleaned = {}
+  for (let key in headers) {
+    cleaned[key.toLowerCase()] = headers[key]
+  }
+  return cleaned
+} 
+
 
 module.exports.handler = handler

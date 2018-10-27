@@ -37,16 +37,16 @@ source ./exports.sh
 export USERTOKENS_S3_BUCKET="forgotpw-usertokens-$AWS_ENV"
 export AWS_REGION=us-east-1
 
-# validate the 1234 confirmation code used in the sample event
+# validate the 1234 verification code used in the sample event
 AWS_ENV= iam-starter \
-    --role dev \
+    --role role-ops-devops \
     --profile $PROFILE \
     --command ssm-starter \
     --ssm-name /fpw/ \
-    --command node mockConfirmationCode.js '1234' '609-555-1313' 0
+    --command node mockVerificationCode.js '1234' '609-555-1313' 0
 
 iam-starter \
-    --role dev \
+    --role role-ops-devops \
     --profile $PROFILE \
     --command sls invoke local \
     -f fpw-restapi \
@@ -63,7 +63,7 @@ export AWS_ENV="dev" && export PROFILE="fpw$AWS_ENV"
 source ./exports.sh
 
 iam-starter \
-    --role dev \
+    --role role-ops-devops \
     --profile $PROFILE \
     --command sls invoke test
 ```
@@ -75,7 +75,7 @@ iam-starter \
 export PHONE="609-555-1212"
 export SUBDOMAIN="api-dev"
 
-# request a confirmation code
+# request a verification code
 curl -X POST \
     --header "Content-Type: application/json" \
     -d '{"application": "myapp", "phone": "'$PHONE'"}' \
@@ -84,7 +84,7 @@ curl -X POST \
 # request storing a password
 curl -X PUT \
     --header "Content-Type: application/json" \
-    -d '{"confirmationCode": "1234", "secret": "my secret", "application": "myapp", "phone": "'$PHONE'"}' \
+    -d '{"verificationCode": "1234", "secret": "my secret", "application": "myapp", "phone": "'$PHONE'"}' \
     https://$SUBDOMAIN.forgotpw.com/v1/secrets
 
 # request retrieving a password
@@ -96,7 +96,7 @@ curl -X POST \
 # request to nuke an account
 curl -X POST \
     --header "Content-Type: application/json" \
-    -d '{"confirmationCode": "1234", "phone": "'$PHONE'"}' \
+    -d '{"verificationCode": "1234", "phone": "'$PHONE'"}' \
     https://$SUBDOMAIN.forgotpw.com/v1/nuke
 ```
 

@@ -1,7 +1,7 @@
 {
   "resource": "/v1/{proxy+}",
-  "path": "/v1/nuke",
-  "httpMethod": "POST",
+  "path": "/v1/secrets",
+  "httpMethod": "PUT",
   "headers": {
       "Accept": "*/*",
       "CloudFront-Forwarded-Proto": "https",
@@ -22,16 +22,16 @@
   },
   "queryStringParameters": null,
   "pathParameters": {
-      "proxy": "nuke"
+      "proxy": "secrets"
   },
   "stageVariables": null,
   "requestContext": {
       "resourceId": "ad7byy",
       "resourcePath": "/v1/{proxy+}",
-      "httpMethod": "POST",
+      "httpMethod": "PUT",
       "extendedRequestId": "LGnKlFIsIAMFvQw=",
       "requestTime": "04/Aug/2018:14:31:06 +0000",
-      "path": "/v1/nuke",
+      "path": "/v1/secrets",
       "accountId": "478543871670",
       "protocol": "HTTP/1.1",
       "stage": "live",
@@ -52,6 +52,6 @@
       },
       "apiId": "aykeino5k6"
   },
-  "body": "{\"verificationCode\": 1234, \"application\": \"myapp\", \"phone\": \"609-555-1414\"}",
+  "body": "{\"secret\": \"my secret\", \"application\": \"myapp\", \"phone\": \"609-555-1313\"}",
   "isBase64Encoded": false
 }

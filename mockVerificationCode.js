@@ -1,7 +1,7 @@
 const AWS = require('aws-sdk')
 const PhoneTokenService = require('phone-token-service')
 
-async function writeTestConfirmationCode(confirmationCode, phone, isExpired) {
+async function writeTestVerificationCode(verificationCode, phone, isExpired) {
   const phoneTokenService = new PhoneTokenService({
     tokenHashHmac: process.env.USERTOKEN_HASH_HMAC,
     s3bucket: process.env.USERTOKENS_S3_BUCKET,
@@ -22,25 +22,25 @@ async function writeTestConfirmationCode(confirmationCode, phone, isExpired) {
   expireEpoch = Math.round(expireEpoch / 1000)
 
   const params = {
-      TableName: 'fpw_confirmation_code',
+      TableName: 'fpw_verification_code',
       Item:{
           "UserToken": userToken,
-          "Code": confirmationCode,
+          "Code": verificationCode,
           "ExpireTime": expireEpoch
       }
   };
 
-  console.log(`Storing confirmation code ${confirmationCode} to Dynamodb for ${userToken}...`)
+  console.log(`Storing verification code ${verificationCode} to Dynamodb for ${userToken}...`)
   try {
     await docClient.put(params).promise()
   }
   catch (err) {
-    console.error("Unable to write confirmation code to Dynamodb: ", JSON.stringify(err, null, 2))
+    console.error("Unable to write verification code to Dynamodb: ", JSON.stringify(err, null, 2))
     throw err
   }
-  return `${confirmationCode} ${isExpired ? 'invalid' : 'valid'} for phone: ${phone} token: ${userToken}`
+  return `${verificationCode} ${isExpired ? 'invalid' : 'valid'} for phone: ${phone} token: ${userToken}`
 }
 
-module.exports = writeTestConfirmationCode
+module.exports = writeTestVerificationCode
 
 require('make-runnable')
