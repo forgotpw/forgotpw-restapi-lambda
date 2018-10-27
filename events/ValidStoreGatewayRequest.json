@@ -19,7 +19,7 @@
       "X-Forwarded-For": "69.248.82.211, 70.132.13.90",
       "X-Forwarded-Port": "443",
       "X-Forwarded-Proto": "https",
-      "X-VerificationCode": "1234"
+      "X-FPW-VerificationCode": "1234"
   },
   "queryStringParameters": null,
   "pathParameters": {

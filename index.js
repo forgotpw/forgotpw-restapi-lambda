@@ -75,7 +75,7 @@ async function secretsController(event) {
         logger.error(msg)
         return gatewayResponse(400, msg)
       }
-      const verificationCode = cleanHeaders(event.headers)['x-verificationcode']
+      const verificationCode = cleanHeaders(event.headers)['x-fpw-verificationcode']
       if (!verificationCode) {
         let msg = 'Verification code is not present'
         logger.warn(msg)
@@ -211,7 +211,7 @@ function parsePath(event) {
   return path
 }
 
-// convert all http headers to lower case as X-VerificationCode
+// convert all http headers to lower case as X-FPW-VerificationCode
 // becomes x-verificationcode anyway, so as to avoid confusion,
 // lower case them all 
 function cleanHeaders(headers) {

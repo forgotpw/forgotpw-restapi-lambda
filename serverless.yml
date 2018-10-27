@@ -116,7 +116,7 @@ functions:
               - X-Api-Key
               - X-Amz-Security-Token
               - X-Amz-User-Agent
-              - X-VerificationCode
+              - X-FPW-VerificationCode
               - Access-Control-Allow-Headers
               - Access-Control-Allow-Origin
               - Access-Control-Allow-Methods
