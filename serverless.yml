@@ -117,6 +117,7 @@ functions:
               - X-Amz-Security-Token
               - X-Amz-User-Agent
               - X-FPW-VerificationCode
+              - X-FPW-CountryCode
               - Access-Control-Allow-Headers
               - Access-Control-Allow-Origin
               - Access-Control-Allow-Methods
