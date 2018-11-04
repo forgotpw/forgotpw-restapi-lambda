@@ -55,6 +55,12 @@ async function handler(event, context, done) {
 }
 
 async function secretsController(event) {
+  let headers = cleanHeaders(event.headers)
+  const countryCode = headers['x-fpw-countrycode']
+  if (countryCode && countryCode.length == 2) {
+    phoneTokenConfig.defaultCountryCode = countryCode
+  }
+
   const phoneTokenService = new PhoneTokenService(phoneTokenConfig)
   const secretsApiService = new SecretsApiService()
 
@@ -75,7 +81,7 @@ async function secretsController(event) {
         logger.error(msg)
         return gatewayResponse(400, msg)
       }
-      const verificationCode = cleanHeaders(event.headers)['x-fpw-verificationcode']
+      const verificationCode = headers['x-fpw-verificationcode']
       if (!verificationCode) {
         let msg = 'Verification code is not present'
         logger.warn(msg)
@@ -135,6 +141,11 @@ async function codesController(event) {
 }
 
 async function nukeController(event) {
+  let headers = cleanHeaders(event.headers)
+  const countryCode = headers['x-fpw-countrycode']
+  if (countryCode && countryCode.length == 2) {
+    phoneTokenConfig.defaultCountryCode = countryCode
+  }
   const phoneTokenService = new PhoneTokenService(phoneTokenConfig)
   const nukeService = new NukeService()
 
