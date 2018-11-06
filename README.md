@@ -81,10 +81,14 @@ curl -X POST \
     -d '{"application": "myapp", "phone": "'$PHONE'"}' \
     https://$SUBDOMAIN.forgotpw.com/v1/codes
 
+export CODE="1234" # result of actual verification request
+
 # request storing a password
 curl -X PUT \
     --header "Content-Type: application/json" \
-    -d '{"verificationCode": "1234", "secret": "my secret", "application": "myapp", "phone": "'$PHONE'"}' \
+    --header "X-FPW-VerificationCode: $CODE" \
+    --header "X-FPW-CountryCode: US" \
+    -d '{"secret": "my & secret", "application": "myapp", "phone": "'$PHONE'"}' \
     https://$SUBDOMAIN.forgotpw.com/v1/secrets
 
 # request retrieving a password
@@ -96,7 +100,9 @@ curl -X POST \
 # request to nuke an account
 curl -X POST \
     --header "Content-Type: application/json" \
-    -d '{"verificationCode": "1234", "phone": "'$PHONE'"}' \
+    --header "X-FPW-VerificationCode: $CODE" \
+    --header "X-FPW-CountryCode: US" \
+    -d '{"phone": "'$PHONE'"}' \
     https://$SUBDOMAIN.forgotpw.com/v1/nuke
 ```
 
