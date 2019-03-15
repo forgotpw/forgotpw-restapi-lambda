@@ -18,10 +18,9 @@ export AWS_ENV="dev" && export PROFILE="fpw$AWS_ENV"
 # will export environment variables needed for serverless.yml
 source ./exports.sh
 
-sls \
-    deploy \
-    --aws-profile $PROFILE \
-    --verbose
+iam-starter \
+    --profile $PROFILE \
+    --command sls deploy --verbose
 ```
 
 ## Invoke Locally
@@ -29,8 +28,9 @@ sls \
 Initial setup:
 
 ```shell
+#pip install iam-starter
+#pip install ssm-starter
 nvm use 8.10.0
-pip install iam-starter
 
 export AWS_ENV="dev" && export PROFILE="fpw$AWS_ENV"
 source ./exports.sh
@@ -57,7 +57,7 @@ iam-starter \
 ## Invoke Tests
 
 ```shell
-pip install iam-starter
+#pip install iam-starter
 
 export AWS_ENV="dev" && export PROFILE="fpw$AWS_ENV"
 source ./exports.sh

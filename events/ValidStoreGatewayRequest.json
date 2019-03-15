@@ -53,6 +53,6 @@
       },
       "apiId": "aykeino5k6"
   },
-  "body": "{\"secret\": \"my secret\", \"application\": \"myapp\", \"phone\": \"609-555-1313\"}",
+  "body": "{\"secret\": \"my secret\", \"application\": \"my app\", \"phone\": \"609-555-1313\"}",
   "isBase64Encoded": false
 }
