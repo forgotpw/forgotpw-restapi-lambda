@@ -10,7 +10,7 @@
     "joi": "^13.5.2",
     "libphonenumber-js": "^1.6.0",
     "phone-token-service": "0.0.2",
-    "string-normalizer": "0.0.1"
+    "string-normalizer": "1.0.1"
   },
   "devDependencies": {
     "chai": "^4.2.0",
