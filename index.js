@@ -14,6 +14,10 @@ const phoneTokenConfig = {
   defaultCountryCode: 'US'
 }
 
+// Note: If I had it to do over, for this REST API I would use:
+// https://github.com/dougmoscrop/serverless-http with Koa
+// or https://github.com/awslabs/aws-serverless-express
+
 async function handler(event, context, done) {
 
   // raw console log output easier to copy/paste json from cloudwatch logs
@@ -23,7 +27,7 @@ async function handler(event, context, done) {
 
   let path = ''
   try {
-    path = parsePath(event)
+    path = parsePath(event).toLowerCase()
   }
   catch (err) {
     const msg = 'Error parsing path: ' + err
@@ -34,18 +38,16 @@ async function handler(event, context, done) {
 
   try {
     let response
-    switch (path) {
-      case '/v1/secrets':
-        response = await secretsController(event, done)
-        break
-      case '/v1/codes':
-        response = await codesController(event, done)
-        break
-      case '/v1/nuke':
-        response = await nukeController(event, done)
-        break
-      default:
-        throw new Error(`Unhandled path requested: ${path}`)
+    if (path.startsWith('/v1/secrets')) {
+      response = await secretsController(event, done)
+    } else if (path.startsWith('/v1/codes')) {
+      response = await codesController(event, done)
+    } else if (path.startsWith('/v1/authorizedrequests')) {
+      response = await authorizedRequestsController(event, done)
+    } else if (path.startsWith('/v1/nuke')) {
+      response = await nukeController(event, done)
+    } else {
+      throw new Error(`Unhandled path requested: ${path}`)
     }
     done(null, response)
   }
@@ -137,6 +139,40 @@ async function codesController(event) {
       return gatewayResponse(200, 'Successfully posted event')
     default:
       throw new Error(`Unhandled method requested: ${event.method}`)
+  }
+}
+
+async function authorizedRequestsController(event) {
+  const secretsApiService = new SecretsApiService()
+
+  switch (event.httpMethod) {
+    case 'GET':
+      // event.path: /v1/authorizedRequests/12345"
+      let aridData = null, arid = null
+      try {
+        arid = event.path.split('/')[2]
+      }
+      catch (err) {
+        let msg = `Error parsing path (${event.path}) for arid: ${err}`
+        throw new Error(msg)
+      }
+      try {
+        aridData = await secretsApiService.getAuthorizedRequest(arid)
+        const response = {
+          rawApplication: aridData.rawApplication,
+          normalizedApplication: aridData.normalizedApplication
+        }
+        return gatewayResponse(200, response)  
+      }
+      catch (err) {
+        if (err.toString().includes('AridNotFound')) {
+          return gatewayResponse(404)
+        } else if (err.toString().includes('AridExpired')) {
+          return gatewayResponse(403)
+        }
+      }
+    default:
+      throw new Error(`Unhandled method requested: ${event.httpMethod}`)
   }
 }
 

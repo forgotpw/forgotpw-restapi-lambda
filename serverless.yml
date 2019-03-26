@@ -100,6 +100,8 @@ functions:
       SENDCODE_SNS_TOPIC_NAME: fpw-code-send-request
       NUKEACCOUNT_SNS_TOPIC_NAME: fpw-nuke-account-request
       CODE_INVALIDCOUNT_MAX: 5
+      AUTHREQ_S3_BUCKET: forgotpw-authorized-requests-${env:AWS_ENV, 'dev'}
+      AUTHREQ_EXPIRE_MINS: 10
       LOG_LEVEL: 'debug'
     events:
       - http:
