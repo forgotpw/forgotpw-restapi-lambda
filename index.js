@@ -27,7 +27,7 @@ async function handler(event, context, done) {
 
   let path = ''
   try {
-    path = parsePath(event).toLowerCase()
+    path = parsePath(event)
   }
   catch (err) {
     const msg = 'Error parsing path: ' + err
@@ -42,7 +42,7 @@ async function handler(event, context, done) {
       response = await secretsController(event, done)
     } else if (path.startsWith('/v1/codes')) {
       response = await codesController(event, done)
-    } else if (path.startsWith('/v1/authorizedrequests')) {
+    } else if (path.startsWith('/v1/authorizedRequests')) {
       response = await authorizedRequestsController(event, done)
     } else if (path.startsWith('/v1/nuke')) {
       response = await nukeController(event, done)
@@ -250,7 +250,7 @@ function buildGatewayResponseFromError(err) {
 function parsePath(event) {
   let path = ''
   logger.trace('event.path: ', event.path)
-  path = event.path.trim().toLowerCase()
+  path = event.path.trim()
 
   if (!path || path.length <= 0) {
     throw new Error('Path is unspecified')

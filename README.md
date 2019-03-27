@@ -50,7 +50,7 @@ iam-starter \
     --profile $PROFILE \
     --command sls invoke local \
     -f fpw-restapi \
-    -p ./events/ValidStoreGatewayRequest.json \
+    -p ./events/ValidGetAuthorizedRequest.json \
     -l
 ```
 
