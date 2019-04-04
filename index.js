@@ -14,47 +14,69 @@ const phoneTokenConfig = {
   defaultCountryCode: 'US'
 }
 
-// Note: If I had it to do over, for this REST API I would use:
-// https://github.com/dougmoscrop/serverless-http with Koa
-// or https://github.com/awslabs/aws-serverless-express
+const serverless = require('serverless-http');
+const Koa = require("koa");
+const helmet = require("koa-helmet");
+const koaLogger = require("koa-logger");
+const responseHandler = require('koa-response-handler');
+const app = new Koa();
+const healthRoutes = require("./routes/health");
+const secretsRoutes = require("./routes/secrets");
+const codesRoutes = require("./routes/codes");
+const aridRoutes = require("./routes/authorizedRequests");
 
-async function handler(event, context, done) {
+app
+  .use(koaLogger())
+  .use(helmet())
+  .use(responseHandler())
+  .use(healthRoutes.middleware())
+  .use(secretsRoutes.middleware())
+  .use(codesRoutes.middleware())
+  .use(aridRoutes.middleware())
 
-  // raw console log output easier to copy/paste json from cloudwatch logs
-  if (process.env.LOG_LEVEL == 'trace') {
-    console.log(JSON.stringify(event))
-  }
+const handler = serverless(app);
+module.exports.handler = async (event, context) => {
+  return await handler(event, context);
+};
 
-  let path = ''
-  try {
-    path = parsePath(event)
-  }
-  catch (err) {
-    const msg = 'Error parsing path: ' + err
-    return done(null, buildGatewayResponseFromError(err))
-  }
 
-  logger.trace(`event.httpMethod: ${event.httpMethod}, event.body: ${event.body}`)
+// async function handler(event, context, done) {
 
-  try {
-    let response
-    if (path.startsWith('/v1/secrets')) {
-      response = await secretsController(event, done)
-    } else if (path.startsWith('/v1/codes')) {
-      response = await codesController(event, done)
-    } else if (path.startsWith('/v1/authorizedRequests')) {
-      response = await authorizedRequestsController(event, done)
-    } else if (path.startsWith('/v1/nuke')) {
-      response = await nukeController(event, done)
-    } else {
-      throw new Error(`Unhandled path requested: ${path}`)
-    }
-    done(null, response)
-  }
-  catch (err) {
-    done(null, buildGatewayResponseFromError(err))
-  }
-}
+//   // raw console log output easier to copy/paste json from cloudwatch logs
+//   if (process.env.LOG_LEVEL == 'trace') {
+//     console.log(JSON.stringify(event))
+//   }
+
+//   let path = ''
+//   try {
+//     path = parsePath(event)
+//   }
+//   catch (err) {
+//     const msg = 'Error parsing path: ' + err
+//     return done(null, buildGatewayResponseFromError(err))
+//   }
+
+//   logger.trace(`event.httpMethod: ${event.httpMethod}, event.body: ${event.body}`)
+
+//   try {
+//     let response
+//     if (path.startsWith('/v1/secrets')) {
+//       response = await secretsController(event, done)
+//     } else if (path.startsWith('/v1/codes')) {
+//       response = await codesController(event, done)
+//     } else if (path.startsWith('/v1/authorizedRequests')) {
+//       response = await authorizedRequestsController(event, done)
+//     } else if (path.startsWith('/v1/nuke')) {
+//       response = await nukeController(event, done)
+//     } else {
+//       throw new Error(`Unhandled path requested: ${path}`)
+//     }
+//     done(null, response)
+//   }
+//   catch (err) {
+//     done(null, buildGatewayResponseFromError(err))
+//   }
+// }
 
 async function secretsController(event) {
   let headers = cleanHeaders(event.headers)
