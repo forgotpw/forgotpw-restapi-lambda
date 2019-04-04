@@ -63,18 +63,18 @@ describe('fpw-restapi', () => {
     });
   });
 
-  it('/v1/nuke POST (send) returns 200 for valid requests', async () => {
-    await writeTestVerificationCode(1234, '6095551414', false)
-    return wrapped.run(validNukeAccountEventData).then((response) => {
-      expect(response.statusCode).to.equal(200);
-    });
-  });
+  // it('/v1/nuke POST (send) returns 200 for valid requests', async () => {
+  //   await writeTestVerificationCode(1234, '6095551414', false)
+  //   return wrapped.run(validNukeAccountEventData).then((response) => {
+  //     expect(response.statusCode).to.equal(200);
+  //   });
+  // });
 
-  it('/v1/nuke POST (send) returns 401 for valid requests with invalid verification code', async () => {
-    await writeTestVerificationCode(1234, '6095551414', true)
-    return wrapped.run(validNukeAccountEventData).then((response) => {
-      expect(response.statusCode).to.equal(401);
-    });
-  });
+  // it('/v1/nuke POST (send) returns 401 for valid requests with invalid verification code', async () => {
+  //   await writeTestVerificationCode(1234, '6095551414', true)
+  //   return wrapped.run(validNukeAccountEventData).then((response) => {
+  //     expect(response.statusCode).to.equal(401);
+  //   });
+  // });
 
 });

@@ -46,7 +46,6 @@ AWS_ENV= iam-starter \
     --command node mockVerificationCode.js '1234' '609-555-1313' 0
 
 export EVENT="./events/ValidGetAuthorizedRequest.json"
-export EVENT="./events/ValidSendCodeGatewayRequest.json"
 
 iam-starter \
     --role role-ops-devops \
@@ -59,16 +58,27 @@ iam-starter \
 
 ## Invoke Tests
 
+Invoke tests locally
+
 ```shell
 #pip install iam-starter
 
 export AWS_ENV="dev" && export PROFILE="fpw$AWS_ENV"
-source ./exports.sh
-
 iam-starter \
     --role role-ops-devops \
     --profile $PROFILE \
-    --command sls invoke test
+    --command ./invoke-test.sh
+```
+
+Or invoke tests through Docker
+
+```shell
+docker build -t forgotpw/forgotpw-restapi-lambda .
+iam-docker-run \
+    --image forgotpw/forgotpw-restapi-lambda \
+    --profile fpw$AWS_ENV \
+    -e AWS_ENV=$AWS_ENV \
+    --full-entrypoint "/bin/bash /app/invoke-test.sh"
 ```
 
 ## Test Live Endpoints

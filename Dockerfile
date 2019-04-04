@@ -1,9 +1,9 @@
 FROM ubuntu:18.04
 
 RUN apt update -y && \
-    apt install -y wget python3.6 python3-pip git
+    apt install -y wget python python-pip git
 
-RUN pip3 install awscli
+RUN pip install awscli
 
 # make python output behave in docker
 ENV PYTHONUNBUFFERED=1
@@ -16,6 +16,10 @@ RUN wget https://nodejs.org/dist/v8.10.0/node-v8.10.0-linux-x64.tar.gz && \
 # install serverless framework
 RUN npm install -g serverless
 
-WORKDIR /src
+WORKDIR /app
+
+COPY . .
+
+RUN npm install
 
 # ENTRYPOINT sls invoke test
