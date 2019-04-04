@@ -1,7 +1,9 @@
 const AWS = require('aws-sdk')
 const PhoneTokenService = require('phone-token-service')
+const logger = require('./logger')
 
 async function writeTestVerificationCode(verificationCode, phone, isExpired) {
+  logger.info('Mock verification code process starting')
   const phoneTokenService = new PhoneTokenService({
     tokenHashHmac: process.env.USERTOKEN_HASH_HMAC,
     s3bucket: process.env.USERTOKENS_S3_BUCKET,
@@ -30,7 +32,7 @@ async function writeTestVerificationCode(verificationCode, phone, isExpired) {
       }
   };
 
-  console.log(`Storing verification code ${verificationCode} to Dynamodb for ${userToken}...`)
+  logger.info(`Storing mocked verification code ${verificationCode} to Dynamodb for ${userToken}...`)
   try {
     await docClient.put(params).promise()
   }

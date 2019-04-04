@@ -16,6 +16,8 @@ route
       },
       header: Joi.object({
         'x-fpw-verificationcode': Joi.string().required().min(4).max(10)
+      }).options({
+        allowUnknown: true
       }),
       type: 'json',
     },
@@ -24,7 +26,7 @@ route
         await secretsController.storeSecret(ctx)
       } catch (e) {
         logger.error(e)
-        ctx.res.internalServerError();
+        ctx.status = 500;
       }
     }
   })
@@ -43,7 +45,7 @@ route
         await secretsController.retrieveSecret(ctx)
       } catch (e) {
         logger.error(e)
-        ctx.res.internalServerError();
+        ctx.status = 500;
       }
     }
   })

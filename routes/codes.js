@@ -21,7 +21,7 @@ route
         await codesController.sendCode(ctx)
       } catch (e) {
         logger.error(e)
-        ctx.res.internalServerError();
+        ctx.status = 500;
       }
     }
   })

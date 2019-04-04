@@ -45,7 +45,7 @@ AWS_ENV= iam-starter \
     --ssm-name /fpw/ \
     --command node mockVerificationCode.js '1234' '609-555-1313' 0
 
-export EVENT="./events/ValidGetAuthorizedRequest.json"
+export EVENT="./events/ValidStoreGatewayRequest.json"
 
 iam-starter \
     --role role-ops-devops \

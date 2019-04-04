@@ -1,8 +1,11 @@
 const PhoneTokenService = require('phone-token-service')
 const SecretsApiService = require('../lib/secretsApiService')
 const VerificationCodesService = require('../lib/verificationCodesService')
+const logger = require('../logger')
+const config = require('../config')
 
 module.exports.storeSecret = async function(ctx) {
+    logger.debug('Starting store secret')
     const phoneTokenConfig = {
         tokenHashHmac: config.USERTOKEN_HASH_HMAC,
         s3bucket: config.USERTOKENS_S3_BUCKET,

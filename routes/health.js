@@ -22,7 +22,7 @@ route
         ctx.body = { status: 'healthy' }
       } catch (e) {
         logger.error(e)
-        ctx.res.internalServerError();
+        ctx.status = 500;
       }
     }
   })
