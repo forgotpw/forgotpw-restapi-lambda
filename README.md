@@ -63,6 +63,7 @@ Invoke tests locally
 ```shell
 #pip install iam-starter
 
+export AWS_REGION="us-east-1"
 export AWS_ENV="dev" && export PROFILE="fpw$AWS_ENV"
 iam-starter \
     --role role-ops-devops \
@@ -78,6 +79,7 @@ iam-docker-run \
     --image forgotpw/forgotpw-restapi-lambda \
     --profile fpw$AWS_ENV \
     -e AWS_ENV=$AWS_ENV \
+    -e AWS_REGION=us-east-1 \
     --full-entrypoint "/bin/bash /app/invoke-test.sh"
 ```
 

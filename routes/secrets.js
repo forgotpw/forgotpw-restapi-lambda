@@ -14,11 +14,12 @@ route
         secret: Joi.string().min(3).max(256).required(),
         phone: Joi.string().min(10).max(32).required()
       },
-      header: Joi.object({
-        'x-fpw-verificationcode': Joi.string().required().min(4).max(10)
-      }).options({
-        allowUnknown: true
-      }),
+      // absense of x-fpw-verificationcode should yield 401 not 400
+      // header: Joi.object({
+      //   'x-fpw-verificationcode': Joi.string().required().min(4).max(10)
+      // }).options({
+      //   allowUnknown: true
+      // }),
       type: 'json',
     },
     handler: async (ctx) => {
