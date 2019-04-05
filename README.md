@@ -76,6 +76,7 @@ Or invoke tests through Docker
 ```shell
 docker build -t forgotpw/forgotpw-restapi-lambda .
 iam-docker-run \
+    --interactive \
     --image forgotpw/forgotpw-restapi-lambda \
     --profile fpw$AWS_ENV \
     -e AWS_ENV=$AWS_ENV \

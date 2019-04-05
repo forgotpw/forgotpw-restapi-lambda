@@ -10,7 +10,8 @@ const invalidStoreEventData = require('../events/InvalidStoreGatewayRequest.json
 const validRetrieveEventData = require('../events/ValidRetrieveGatewayRequest.json')
 const invalidRetrieveEventData = require('../events/InvalidRetrieveGatewayRequest.json')
 const validSendCodeEventData = require('../events/ValidSendCodeGatewayRequest.json')
-const validNukeAccountEventData = require('../events/ValidNukeAccountGatewayRequest.json')
+//const validNukeAccountEventData = require('../events/ValidNukeAccountGatewayRequest.json')
+const validGetAuthorizedRequest = require('../events/ValidGetAuthorizedRequest.json')
 
 describe('fpw-restapi', () => {
   before((done) => {
@@ -60,6 +61,12 @@ describe('fpw-restapi', () => {
   it('/v1/codes POST (send) returns 200 for valid requests', () => {
     return wrapped.run(validSendCodeEventData).then((response) => {
       expect(response.statusCode).to.equal(200);
+    });
+  });
+
+  it('/v1/authorizedRequests GET returns 404 for not found requests', () => {
+    return wrapped.run(validGetAuthorizedRequest).then((response) => {
+      expect(response.statusCode).to.equal(404);
     });
   });
 
