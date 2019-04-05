@@ -4,13 +4,13 @@ const wrapped = mochaPlugin.getWrapper('fpw-restapi', '/index.js', 'handler');
 const AWS = require('aws-sdk')
 const writeTestVerificationCode = require('../mockVerificationCode')
 
-const validStoreEventData = require('../events/ValidStoreGatewayRequest.json')
-const codeMissingStoreEventData = require('../events/CodeMissingStoreGatewayRequest.json')
-const invalidStoreEventData = require('../events/InvalidStoreGatewayRequest.json')
-const validRetrieveEventData = require('../events/ValidRetrieveGatewayRequest.json')
-const invalidRetrieveEventData = require('../events/InvalidRetrieveGatewayRequest.json')
-const validSendCodeEventData = require('../events/ValidSendCodeGatewayRequest.json')
-//const validNukeAccountEventData = require('../events/ValidNukeAccountGatewayRequest.json')
+const validStoreEventData = require('../events/ValidStoreRequest.json')
+const codeMissingStoreEventData = require('../events/CodeMissingStoreRequest.json')
+const invalidStoreEventData = require('../events/InvalidStoreRequest.json')
+const validRetrieveEventData = require('../events/ValidRetrieveRequest.json')
+const invalidRetrieveEventData = require('../events/InvalidRetrieveRequest.json')
+const validSendCodeEventData = require('../events/ValidSendCodeRequest.json')
+//const validNukeAccountEventData = require('../events/ValidNukeAccountRequest.json')
 const validGetAuthorizedRequest = require('../events/ValidGetAuthorizedRequest.json')
 
 describe('fpw-restapi', () => {
