@@ -122,18 +122,6 @@ curl -X POST \
     https://$SUBDOMAIN.forgotpw.com/v1/nuke
 ```
 
-## View Logs
-
-Tail log output from Lambda running in AWS:
-
-```shell
-export AWS_ENV="dev" && export PROFILE="fpw$AWS_ENV"
-
-sls logs -f fpw-restapi -l \
-    --aws-profile $PROFILE \
-    -t
-```
-
 ## Setup CI Environment
 
 AWS CodeBuild needs a docker image to use for building, testing, and deploying the lambda function.  These steps build that environment and upload it to AWS for use with CodeBuild.
