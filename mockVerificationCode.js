@@ -40,7 +40,10 @@ async function writeTestVerificationCode(verificationCode, phone, isExpired) {
     console.error("Unable to write verification code to Dynamodb: ", JSON.stringify(err, null, 2))
     throw err
   }
-  return `${verificationCode} ${isExpired ? 'invalid' : 'valid'} for phone: ${phone} token: ${userToken}`
+
+  const result = `${verificationCode} ${isExpired ? 'invalid' : 'valid'} for phone: ${phone} token: ${userToken}`
+  logger.info(`Mock result: ${result}`)
+  return result
 }
 
 module.exports = writeTestVerificationCode

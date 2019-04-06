@@ -7,7 +7,7 @@ module.exports.getAuthorizedRequest = async function(ctx) {
     logger.debug(`Requesting arid: ${arid}`)
     const secretsApiService = new SecretsApiService()
     try {
-        const aridData = await secretsApiService.getAuthorizedRequest()
+        const aridData = await secretsApiService.getAuthorizedRequest(arid)
         const adjAridData = {
             rawApplication: aridData.rawApplication,
             normalizedApplication: aridData.normalizedApplication

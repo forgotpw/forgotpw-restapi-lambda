@@ -12,5 +12,6 @@ module.exports.sendCode = async function(ctx) {
     const verificationCodesService = new VerificationCodesService()
     const userToken = await phoneTokenService.getTokenFromPhone(ctx.request.body.phone)
     await verificationCodesService.publishSendCodeEvent(userToken)
+    ctx.body = JSON.stringify({ message: 'OK' })
     ctx.status = 200
 }

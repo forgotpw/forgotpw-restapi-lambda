@@ -5,6 +5,7 @@ const Koa = require("koa");
 const helmet = require("koa-helmet");
 const koaLogger = require("koa-logger");
 const responseHandler = require('koa-response-handler');
+const cors = require('koa2-cors');
 const healthRoutes = require("./routes/health");
 const secretsRoutes = require("./routes/secrets");
 const codesRoutes = require("./routes/codes");
@@ -16,6 +17,7 @@ app
   .use(koaLogger())
   .use(helmet())
   .use(responseHandler())
+  .use(cors())
   .use(healthRoutes.middleware())
   .use(secretsRoutes.middleware())
   .use(codesRoutes.middleware())

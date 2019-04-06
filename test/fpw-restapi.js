@@ -1,8 +1,8 @@
 const mochaPlugin = require('serverless-mocha-plugin');
 const expect = mochaPlugin.chai.expect;
 const wrapped = mochaPlugin.getWrapper('fpw-restapi', '/index.js', 'handler');
-const AWS = require('aws-sdk')
 const writeTestVerificationCode = require('../mockVerificationCode')
+const writeTestAuthorizedRequest = require('../mockAuthorizedRequest')
 
 const validStoreEventData = require('../events/ValidStoreRequest.json')
 const codeMissingStoreEventData = require('../events/CodeMissingStoreRequest.json')
@@ -10,7 +10,6 @@ const invalidStoreEventData = require('../events/InvalidStoreRequest.json')
 const validRetrieveEventData = require('../events/ValidRetrieveRequest.json')
 const invalidRetrieveEventData = require('../events/InvalidRetrieveRequest.json')
 const validSendCodeEventData = require('../events/ValidSendCodeRequest.json')
-//const validNukeAccountEventData = require('../events/ValidNukeAccountRequest.json')
 const validGetAuthorizedRequest = require('../events/ValidGetAuthorizedRequest.json')
 
 describe('fpw-restapi', () => {
@@ -64,24 +63,33 @@ describe('fpw-restapi', () => {
     });
   });
 
-  it('/v1/authorizedRequests GET returns 404 for not found requests', () => {
+  it('/v1/authorizedRequests GET returns 200 for valid requests', async () => {
+    const arid = 'abc123'
+    const path = `/v1/authorizedRequests/${arid}`
+    validGetAuthorizedRequest.path = path
+    await writeTestAuthorizedRequest(arid, '6095551212', 'testapp', false)
+    return wrapped.run(validGetAuthorizedRequest).then((response) => {
+      expect(response.statusCode).to.equal(200);
+    });
+  });
+
+  it('/v1/authorizedRequests GET returns 404 for non-existant arid', async () => {
+    const arid = 'notGoingToBeFound'
+    const path = `/v1/authorizedRequests/${arid}`
+    validGetAuthorizedRequest.path = path
     return wrapped.run(validGetAuthorizedRequest).then((response) => {
       expect(response.statusCode).to.equal(404);
     });
   });
 
-  // it('/v1/nuke POST (send) returns 200 for valid requests', async () => {
-  //   await writeTestVerificationCode(1234, '6095551414', false)
-  //   return wrapped.run(validNukeAccountEventData).then((response) => {
-  //     expect(response.statusCode).to.equal(200);
-  //   });
-  // });
-
-  // it('/v1/nuke POST (send) returns 401 for valid requests with invalid verification code', async () => {
-  //   await writeTestVerificationCode(1234, '6095551414', true)
-  //   return wrapped.run(validNukeAccountEventData).then((response) => {
-  //     expect(response.statusCode).to.equal(401);
-  //   });
-  // });
+  it('/v1/authorizedRequests GET returns 403 for expired arid', async () => {
+    const arid = 'expired123'
+    const path = `/v1/authorizedRequests/${arid}`
+    validGetAuthorizedRequest.path = path
+    await writeTestAuthorizedRequest(arid, '6095551212', 'testapp', true)
+    return wrapped.run(validGetAuthorizedRequest).then((response) => {
+      expect(response.statusCode).to.equal(403);
+    });
+  });
 
 });

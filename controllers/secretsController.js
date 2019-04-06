@@ -17,7 +17,7 @@ module.exports.storeSecret = async function(ctx) {
     const verificationCode = ctx.headers['x-fpw-verificationcode']
     if (!verificationCode) {
       ctx.status = 401
-      ctx.body = 'Verification code is missing in header'
+      ctx.body = JSON.stringify({ message: 'Verification code is missing in header' })
     }
     const verificationCodesService = new VerificationCodesService()
     let valid = await verificationCodesService.validateCode(
@@ -27,14 +27,14 @@ module.exports.storeSecret = async function(ctx) {
       let msg = 'Verification code presented is not valid or is expired'
       logger.warn(msg)
       ctx.status = 401
-      ctx.body = msg
+      ctx.body = JSON.stringify({ message: msg })
     } else {
       await secretsApiService.publishStoreEvent(
         ctx.request.body.secret,
         ctx.request.body.application,
         userToken)
       ctx.status = 200
-      ctx.body = 'Successfully posted store secret event'    
+      ctx.body = JSON.stringify({ message: 'Successfully posted store secret event' })
     }
 }
 
@@ -46,5 +46,5 @@ module.exports.retrieveSecret = async function(ctx) {
         ctx.request.body.application,
         userToken)
     ctx.status = 200
-    ctx.body = 'Successfully posted retrieve secret event'      
+    ctx.body = JSON.stringify({ message: 'Successfully posted retrieve secret event' })
 }
