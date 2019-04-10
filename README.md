@@ -46,6 +46,7 @@ AWS_ENV= iam-starter \
     --command node mockVerificationCode.js '1234' '609-555-1313' 0
 
 export EVENT="./events/ValidStoreRequest.json"
+export EVENT="./events/ValidGetAuthorizedRequest.json"
 
 iam-starter \
     --role role-ops-devops \
