@@ -30,6 +30,14 @@ provider:
     -
       Effect: Allow
       Action:
+        - s3:GetObject
+        - s3:ListBucket
+      Resource:
+        - arn:aws:s3:::${ssm:/fpw/AUTHREQ_S3_BUCKET}/*
+        - arn:aws:s3:::${ssm:/fpw/AUTHREQ_S3_BUCKET}
+    -
+      Effect: Allow
+      Action:
         - sns:Publish
       Resource:
         - 'Fn::Join':

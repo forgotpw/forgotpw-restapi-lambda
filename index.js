@@ -17,7 +17,11 @@ app
   .use(koaLogger())
   .use(helmet())
   .use(responseHandler())
-  .use(cors())
+  .use(cors({
+    origin: '*',
+    allowMethods: ['GET', 'PUT', 'POST', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS']
+  }
+  ))
   .use(healthRoutes.middleware())
   .use(secretsRoutes.middleware())
   .use(codesRoutes.middleware())
