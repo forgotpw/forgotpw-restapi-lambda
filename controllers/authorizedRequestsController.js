@@ -82,7 +82,7 @@ module.exports.retrieveSecret = async function(ctx) {
     try {
         const secret = await secretsApiService.retrieveSecret(aridData.normalizedApplication, aridData.userToken)
         ctx.status = 200
-        ctx.body = JSON.stringify({ secret })
+        ctx.body = JSON.stringify(secret)
     }
     catch (err) {
         logger.error(`Retrieving secret from SecretsApiService: ${err}`)
