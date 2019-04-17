@@ -9,8 +9,10 @@ module.exports.getAuthorizedRequest = async function(ctx) {
     try {
         const aridData = await secretsApiService.getAuthorizedRequest(arid)
         const adjAridData = {
-            rawApplication: aridData.rawApplication,
-            normalizedApplication: aridData.normalizedApplication
+            // for security reasons don't return the application or user token here
+            // purpose of this get is mainly to validate that a valid, non-expired
+            // arid has been requested
+            expireEpoch: aridData.expireEpoch
         }
         ctx.status = 200
         ctx.body = JSON.stringify(adjAridData)
@@ -57,11 +59,12 @@ module.exports.storeSecret = async function(ctx) {
 module.exports.retrieveSecret = async function(ctx) {
     const arid = ctx.request.params.arid
     logger.debug(`Request to retrieve secret for arid: ${arid}`)
+
+    logger.debug(`Requesting arid: ${arid}`)
     const secretsApiService = new SecretsApiService()
+    let aridData = null;
     try {
-        await secretsApiService.publishRetrieveEventFromArid(arid)
-        ctx.status = 200
-        ctx.body = JSON.stringify({ message: 'OK' })
+        aridData = await secretsApiService.getAuthorizedRequest(arid)
     }
     catch (err) {
         if (err.toString().includes('AridNotFound')) {
@@ -74,5 +77,15 @@ module.exports.retrieveSecret = async function(ctx) {
             logger.error(`Unexpected error from SecretsApiService: ${err}`)
             ctx.status = 500
         }
+    }
+
+    try {
+        const secret = await secretsApiService.retrieveSecret(aridData.normalizedApplication, aridData.userToken)
+        ctx.status = 200
+        ctx.body = JSON.stringify({ secret })
+    }
+    catch (err) {
+        logger.error(`Retrieving secret from SecretsApiService: ${err}`)
+        ctx.status = 500
     }
 }

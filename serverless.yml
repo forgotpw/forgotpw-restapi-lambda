@@ -38,6 +38,16 @@ provider:
     -
       Effect: Allow
       Action:
+        - s3:GetObject
+      Resource: arn:aws:s3:::forgotpw-userdata-${env:AWS_ENV, 'dev'}/users/*
+    -
+      Effect: Allow
+      Action:
+        - s3:ListBucket
+      Resource: arn:aws:s3:::forgotpw-userdata-*
+    -
+      Effect: Allow
+      Action:
         - sns:Publish
       Resource:
         - 'Fn::Join':
@@ -103,6 +113,8 @@ functions:
     environment:
       USERTOKEN_HASH_HMAC: ${ssm:/fpw/USERTOKEN_HASH_HMAC~true}
       USERTOKENS_S3_BUCKET: forgotpw-usertokens-${env:AWS_ENV, 'dev'}
+      USERDATA_S3_BUCKET: forgotpw-userdata-${env:AWS_ENV, 'dev'}
+      USERDATA_S3_SSEC_KEY: ${ssm:/fpw/USERDATA_S3_SSEC_KEY~true}
       STORE_SNS_TOPIC_NAME: fpw-secret-store-request
       RETRIEVE_SNS_TOPIC_NAME: fpw-secret-retrieve-request
       SENDCODE_SNS_TOPIC_NAME: fpw-code-send-request
