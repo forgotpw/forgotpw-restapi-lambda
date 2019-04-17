@@ -8,7 +8,7 @@ async function writeTestAuthorizedRequest(arid, phone, application, isExpired) {
   logger.info('Mock authorized request process starting')
   const phoneTokenService = new PhoneTokenService({
     tokenHashHmac: process.env.USERTOKEN_HASH_HMAC,
-    s3bucket: process.env.USERTOKENS_S3_BUCKET,
+    s3bucket: process.env.USERTOKENS_S3_BUCKET || `forgotpw-usertokens-dev`,
     defaultCountryCode: 'US'
   })
   let userToken = await phoneTokenService.getTokenFromPhone(phone)
