@@ -145,12 +145,6 @@ functions:
               - Access-Control-Allow-Methods
 resources:
   Resources:
-    SsmAuthReqS3Bucket:
-      Type: "AWS::SSM::Parameter"
-      Properties:
-        Name: "/fpw/AUTHREQ_S3_BUCKET"
-        Type: "String"
-        Value: forgotpw-authorized-requests-${env:AWS_ENV, 'dev'}
     StoreRequestSNSEvent:
       Type: AWS::SNS::Topic
       Properties: 

@@ -13,6 +13,8 @@ npm install serverless -g
 
 ## Deploy
 
+Apply Terraform, then deploy CloudFormation stack:
+
 ```shell
 export AWS_ENV="dev" && export PROFILE="fpw$AWS_ENV"
 # will export environment variables needed for serverless.yml

@@ -2,3 +2,4 @@ node_modules
 .serverless
 # .env file only for serverless invoke local
 .env
+.terraform/
