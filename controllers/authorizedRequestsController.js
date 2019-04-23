@@ -64,28 +64,31 @@ module.exports.retrieveSecret = async function(ctx) {
     const secretsApiService = new SecretsApiService()
     let aridData = null;
     try {
-        aridData = await secretsApiService.getAuthorizedRequest(arid)
+        aridData = await secretsApiService.getAuthorizedRequest(arid);
     }
     catch (err) {
         if (err.toString().includes('AridNotFound')) {
-            ctx.body = JSON.stringify({ message: `Arid '${arid}' is not found (may be long expired)` })
-            ctx.status = 404
+            ctx.body = JSON.stringify({ message: `Arid '${arid}' is not found (may be long expired)` });
+            ctx.status = 404;
+            return;
         } else if (err.toString().includes('AridExpired')) {
-            ctx.body = JSON.stringify({ message: `Arid ${arid} is expired` })
-            ctx.status = 403
+            ctx.body = JSON.stringify({ message: `Arid ${arid} is expired` });
+            ctx.status = 403;
+            return;
         } else {
-            logger.error(`Unexpected error from SecretsApiService: ${err}`)
-            ctx.status = 500
+            logger.error(`Unexpected error from SecretsApiService: ${err}`);
+            ctx.status = 500;
+            return;
         }
     }
 
     try {
-        const secret = await secretsApiService.retrieveSecret(aridData.normalizedApplication, aridData.userToken)
-        ctx.status = 200
-        ctx.body = JSON.stringify(secret)
+        const secret = await secretsApiService.retrieveSecret(aridData.normalizedApplication, aridData.userToken);
+        ctx.status = 200;
+        ctx.body = JSON.stringify(secret);
     }
     catch (err) {
-        logger.error(`Retrieving secret from SecretsApiService: ${err}`)
-        ctx.status = 500
+        logger.error(`Retrieving secret from SecretsApiService: ${err}`);
+        ctx.status = 500;
     }
 }
