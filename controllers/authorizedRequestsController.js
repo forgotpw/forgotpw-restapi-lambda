@@ -12,7 +12,8 @@ module.exports.getAuthorizedRequest = async function(ctx) {
             // for security reasons don't return the application or user token here
             // purpose of this get is mainly to validate that a valid, non-expired
             // arid has been requested
-            expireEpoch: aridData.expireEpoch
+            expireEpoch: aridData.expireEpoch,
+            isFirstTime: aridData.isFirstTime
         }
         ctx.status = 200
         ctx.body = JSON.stringify(adjAridData)
