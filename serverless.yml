@@ -48,6 +48,12 @@ provider:
     -
       Effect: Allow
       Action:
+        - s3:GetObject
+      Resource:
+        - arn:aws:s3:::${ssm:/fpw/AUTOGEN_S3_BUCKET}/*
+    -
+      Effect: Allow
+      Action:
         - sns:Publish
       Resource:
         - 'Fn::Join':
@@ -122,6 +128,9 @@ functions:
       CODE_INVALIDCOUNT_MAX: 5
       AUTHREQ_S3_BUCKET: ${ssm:/fpw/AUTHREQ_S3_BUCKET}
       AUTHREQ_EXPIRE_MINS: 10
+      AUTOGEN_S3_BUCKET: ${ssm:/fpw/AUTOGEN_S3_BUCKET}
+      AUTOGEN_PW_NUMWORDS: 2
+      AUTOGEN_PW_MAXCHARSPERWORD: 15
       LOG_LEVEL: 'debug'
     events:
       - http:
