@@ -53,8 +53,6 @@ iam-starter \
 Invoke tests locally
 
 ```shell
-#pip install iam-starter
-
 export AWS_REGION="us-east-1"
 export AWS_ENV="dev" && export PROFILE="fpw$AWS_ENV"
 iam-starter \
