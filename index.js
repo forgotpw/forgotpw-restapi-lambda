@@ -8,7 +8,6 @@ const responseHandler = require('koa-response-handler');
 const cors = require('koa2-cors');
 const healthRoutes = require("./routes/health");
 const secretsRoutes = require("./routes/secrets");
-const codesRoutes = require("./routes/codes");
 const aridRoutes = require("./routes/authorizedRequests");
 
 const app = new Koa();
@@ -24,7 +23,6 @@ app
   ))
   .use(healthRoutes.middleware())
   .use(secretsRoutes.middleware())
-  .use(codesRoutes.middleware())
   .use(aridRoutes.middleware())
 
 const handler = serverless(app);
