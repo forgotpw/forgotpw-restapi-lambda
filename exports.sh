@@ -12,10 +12,10 @@ else
     export SUBDOMAIN="api-$AWS_ENV"
 fi
 export PROFILE="fpw$AWS_ENV"
-echo "Exporting serverless environment variables using hostname $SUBDOMAIN.forgotpw.com AWS profile $PROFILE..."
+echo "Exporting serverless environment variables using hostname $SUBDOMAIN.rosa.bot AWS profile $PROFILE..."
 export REST_API_ID=$( \
   aws apigateway get-rest-apis \
-        --query 'items[?name==`'"$SUBDOMAIN"'.forgotpw.com`].[id]' \
+        --query 'items[?name==`'"$SUBDOMAIN"'.rosa.bot`].[id]' \
         --output text \
         --profile $PROFILE)
 echo "REST_API_ID: $REST_API_ID"
