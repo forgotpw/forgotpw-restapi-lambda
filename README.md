@@ -1,5 +1,7 @@
 # ForgotPW REST API Lambda
 
+**NOTE: Rosa (www.rosa.bot) is the new name for ForgotPW**
+
 API Gateway REST endpoints for api.forgotpw.com/v1/.
 
 ## Setup
