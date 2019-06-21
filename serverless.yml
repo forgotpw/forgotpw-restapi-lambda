@@ -9,6 +9,7 @@ provider:
   runtime: nodejs8.10
   deploymentBucket: forgotpw-deploy-${env:AWS_ENV, 'dev'}
   stage: live
+  memorySize: 2048 # 1024 is default
   logRetentionInDays: 14 # cloudwatch logs
   timeout: 10 # seconds
   versionFunctions: true
