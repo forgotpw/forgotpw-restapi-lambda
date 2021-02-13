@@ -16,10 +16,12 @@ if [ "$AWS_ENV" == "prod" ]; then
 else
     export SUBDOMAIN="api-$AWS_ENV"
 fi
+echo "Subdomain: $SUBDOMAIN"
+
 echo "Exporting serverless environment variables using hostname $SUBDOMAIN.forgotpw.com"
 export REST_API_ID=$( \
   aws apigateway get-rest-apis \
-        --query 'items[?name==`'"$SUBDOMAIN"'.forgotpw.com`].[id]' \
+        --query 'items[?name==`'"$SUBDOMAIN"'.rosa.bot`].[id]' \
         --output text)
 echo "REST_API_ID: $REST_API_ID"
 export ROOT_RESOURCE_ID=$( \

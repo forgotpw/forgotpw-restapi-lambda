@@ -1,14 +1,15 @@
 service: secrets-api
 
 # pin to a specific Serverless version
-frameworkVersion: ">=1.2.0 <2.0.0"
+frameworkVersion: ">=2.0.0 <3.0.0"
 
 provider:
   name: aws
   region: us-east-1
-  runtime: nodejs8.10
+  runtime: nodejs14.x
   deploymentBucket: forgotpw-deploy-${env:AWS_ENV, 'dev'}
   stage: live
+  stackName: secrets-api-live
   memorySize: 2048 # 1024 is default
   logRetentionInDays: 14 # cloudwatch logs
   timeout: 10 # seconds
@@ -57,34 +58,10 @@ provider:
       Action:
         - sns:Publish
       Resource:
-        - 'Fn::Join':
-          - ':'
-          -
-            - 'arn:aws:sns'
-            - Ref: 'AWS::Region'
-            - Ref: 'AWS::AccountId'
-            - 'fpw-secret-store-request'
-        - 'Fn::Join':
-          - ':'
-          -
-            - 'arn:aws:sns'
-            - Ref: 'AWS::Region'
-            - Ref: 'AWS::AccountId'
-            - 'fpw-secret-retrieve-request'
-        - 'Fn::Join':
-          - ':'
-          -
-            - 'arn:aws:sns'
-            - Ref: 'AWS::Region'
-            - Ref: 'AWS::AccountId'
-            - 'fpw-code-send-request'
-        - 'Fn::Join':
-          - ':'
-          -
-            - 'arn:aws:sns'
-            - Ref: 'AWS::Region'
-            - Ref: 'AWS::AccountId'
-            - 'fpw-nuke-account-request'
+        - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:fpw-secret-store-request
+        - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:fpw-secret-retrieve-request
+        - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:fpw-code-send-request
+        - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:fpw-nuke-account-request
     -
       Effect: Allow
       Action:
@@ -102,6 +79,7 @@ provider:
 plugins:
   - serverless-mocha-plugin
   - serverless-prune-plugin
+  - serverless-plugin-diff
 
 custom:
   # serverless-prune-plugin

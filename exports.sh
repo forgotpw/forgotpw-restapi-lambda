@@ -1,12 +1,11 @@
 #!/bin/bash
 
 # will export environment variables needed for serverless.yml
-
 if [ -z "$AWS_ENV" ]; then
     echo "AWS_ENV environment variable not present"
     exit 1
 fi
-if [ "$AWS_ENV" == "prod" ]; then
+if [[ "$AWS_ENV" == "prod" ]]; then
     export SUBDOMAIN="api"
 else
     export SUBDOMAIN="api-$AWS_ENV"

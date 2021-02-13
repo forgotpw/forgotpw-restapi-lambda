@@ -10,8 +10,8 @@ ENV PYTHONUNBUFFERED=1
 ENV PYTHONIOENCODING=utf8
 
 # install nodejs
-RUN wget https://nodejs.org/dist/v8.10.0/node-v8.10.0-linux-x64.tar.gz && \
-	tar -C /usr/local --strip-components 1 -xf node-v8.10.0-linux-x64.tar.gz
+RUN wget https://nodejs.org/dist/v14.15.4/node-v14.15.4-linux-x64.tar.gz && \
+	tar -C /usr/local --strip-components 1 -xf node-v14.15.4-linux-x64.tar.gz
 
 # install serverless framework
 RUN npm install -g serverless
